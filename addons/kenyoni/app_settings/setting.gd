@@ -57,6 +57,7 @@ func apply() -> void:
         self._value = self._pending_value
         self._pending_value = null
         self._is_pending = false
+        self.pending_changed.emit()
         if is_different:
             self.changed.emit()
     if self._apply_fn.is_valid():
@@ -98,6 +99,11 @@ func clear_pending() -> void:
 ## returns null if not staged
 func pending_value() -> Variant:
     return self._pending_value
+
+func pending_or_value() -> Variant:
+    if self._is_pending:
+        return self._pending_value
+    return self._value
 
 ## use this to mark the setting as readonly, it will not be editable, applying will still work
 func set_readonly(readonly: bool = true) -> _KenyoniAppSettingSetting:
