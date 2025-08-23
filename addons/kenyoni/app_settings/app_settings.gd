@@ -2,13 +2,21 @@ extends RefCounted
 
 const Setting := preload("res://addons/kenyoni/app_settings/setting.gd")
 
+## Emitted when any setting has been applied.
+## `key` is the StringName of the applied setting.
 signal applied(key: StringName)
+## Emitted when any setting's effective value has changed.
+## `key` is the StringName of the changed setting.
 signal changed(key: StringName)
-signal pending_changed(key: StringName)
+## Emitted when any staged value has changed or been cleared.
+## `key` is the StringName of the setting whose staged value changed.
+signal staged_changed(key: StringName)
 
 # TODO: use a tree like structure to store settings
 var _settings: Dictionary[StringName, Setting] = {}
 
+## Add a new setting to the manager.
+## Throw an error if the key is invalid or already exists.
 func add(setting: Setting) -> void:
     if setting.key().ends_with("/") || setting.key().contains("//"):
         push_error("Setting keys should not end with a slash or contain an empty section.")
@@ -17,41 +25,44 @@ func add(setting: Setting) -> void:
         self._settings[setting.key()] = setting
         setting.applied.connect(self._on_setting_applied.bind(setting))
         setting.changed.connect(self._on_setting_changed.bind(setting))
-        setting.pending_changed.connect(self._on_setting_pending_changed.bind(setting))
+        setting.staged_changed.connect(self._on_setting_staged_changed.bind(setting))
     else:
         push_error("Setting with key '%s' already exists.".format(setting.key()))
 
+## Return true if a setting with the given key exists.
 func has_setting(key: StringName) -> bool:
     return self._settings.has(key)
 
-## returns null if the setting does not exist
+## Return the setting for the given key, or null if it does not exist.
 func get_setting(key: StringName) -> Setting:
     return self._settings.get(key, null)
 
+## Remove a setting from the manager by its key.
 func remove(key: StringName) -> void:
     var setting: Setting = self.get_setting(key)
     if setting != null:
         setting.applied.disconnect(self._on_setting_applied)
         setting.changed.disconnect(self._on_setting_changed)
-        setting.pending_changed.disconnect(self._on_setting_pending_changed)
+        setting.staged_changed.disconnect(self._on_setting_staged_changed)
         self._settings.erase(key)
 
-## if level_limit is >= 0 it will only return the settings that are level_limit below or less. Otherwise it will return all settings in the section.
-## 0 is just the settings in that section.
-## filter: Callable[[Setting], bool]
-func get_section(section: String, level_limit: int = -1, filter: Callable = _exclude_internal) -> Array[Setting]:
+## Return all settings within a section.
+## - `section` is a key prefix.
+## - `depth` controls how deep in the hierarchy to include settings (-1 for all).
+## - `filter` Callable[[Setting], bool] can be used to include only specific settings.
+func get_section(section: String, depth: int = -1, filter: Callable = _exclude_internal) -> Array[Setting]:
     assert(!section.ends_with("/"), "key should not end with a slash")
     var section_level: int = _get_key_level(section)
     if section != "":
         section += "/"
-    var settings: Array[Setting] = self._settings.values().filter(func(s: Setting): return s.key().begins_with(section) && (level_limit == -1 || (level_limit != -1 && _get_key_level(s.key()) == section_level + level_limit + 1)))
+    var settings: Array[Setting] = self._settings.values().filter(func(s: Setting): return s.key().begins_with(section) && (depth == -1 || (depth != -1 && _get_key_level(s.key()) == section_level + depth + 1)))
     if filter.is_valid():
         settings = settings.filter(filter)
     return settings
 
-## returns the names of that section
-## will not include keys last names
-## filter: Callable[[Setting], bool]
+## Return the names of subsections within a section.
+## - `parent_section` is the key prefix of the parent section.
+## - `filter` Callable[[Setting], bool] can be used to include only specific settings.
 func get_section_names(parent_section: String = "", filter: Callable = _exclude_internal) -> PackedStringArray:
     var sub_section_level: int = _get_key_level(parent_section)
     if parent_section != "":
@@ -73,27 +84,32 @@ func get_section_names(parent_section: String = "", filter: Callable = _exclude_
             sections.append(sub_section_name)
     return sections
 
+## Apply all settings immediately.
 func apply_all() -> void:
     for setting: Setting in self._settings.values():
         setting.apply()
 
-func apply_pending() -> void:
+## Apply only staged values.
+func apply_staged_values() -> void:
     for setting: Setting in self._settings.values():
-        if setting._is_pending:
+        if setting._has_staged_value:
             setting.apply()
 
-func clear_pending() -> void:
+## Clear all staged values.
+func clear_staged_values() -> void:
     for setting: Setting in self._settings.values():
-        if setting.is_pending():
-            setting.clear_pending()
+        if setting.has_staged_value():
+            setting.clear_staged_value()
 
-func has_pending() -> bool:
+## Return true if any settings have staged values.
+func has_staged_values() -> bool:
     for setting: Setting in self._settings.values():
-        if setting.is_pending():
+        if setting.has_staged_value():
             return true
     return false
 
-## filter: Callable[[Setting], bool]
+## Convert exported settings to a ConfigFile.
+## - `filter` Callable[[Setting], bool] can be used to include only specific settings.
 func to_config(filter: Callable = Callable()) -> ConfigFile:
     var config: ConfigFile = ConfigFile.new()
     for key: StringName in self._settings:
@@ -107,6 +123,7 @@ func to_config(filter: Callable = Callable()) -> ConfigFile:
             config.set_value("", key, setting.value())
     return config
 
+## Load settings from a ConfigFile.
 func load_config(config: ConfigFile) -> void:
     for section: String in config.get_sections():
         for key: String in config.get_section_keys(section):
@@ -122,8 +139,8 @@ func _on_setting_applied(setting: Setting) -> void:
 func _on_setting_changed(setting: Setting) -> void:
     self.changed.emit(setting.key())
 
-func _on_setting_pending_changed(setting: Setting) -> void:
-    self.pending_changed.emit(setting.key())
+func _on_setting_staged_changed(setting: Setting) -> void:
+    self.staged_changed.emit(setting.key())
 
 static func _get_key_level(key: StringName) -> int:
     return key.count("/")

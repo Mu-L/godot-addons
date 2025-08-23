@@ -7,7 +7,7 @@ const RevertButton := preload("res://examples/app_settings/settings/revert_butto
 
 func _ready() -> void:
     AppSettings.settings_changed.connect(self._update)
-    AppSettings.settings_pending_changed.connect(self._update)
+    AppSettings.settings_staged_changed.connect(self._update)
 
 func add_section(section: String) -> void:
     if self._container.get_child_count() > 0:
@@ -45,7 +45,7 @@ func _add_edit(setting: Setting) -> void:
         var option_button: OptionButton = self._create_option_button(setting)
         option_button.add_item("On")
         option_button.add_item("Off")
-        if setting.pending_or_value():
+        if setting.staged_or_value():
             option_button.select(0)
         else:
             option_button.select(1)
@@ -65,7 +65,7 @@ func _add_edit(setting: Setting) -> void:
         var sel_idx: int = 0
         for idx: int in range(len(values)):
             option_button.add_item(display_values[idx].capitalize())
-            if setting.pending_or_value() == values[idx]:
+            if setting.staged_or_value() == values[idx]:
                 sel_idx = idx
         option_button.select(sel_idx)
         option_button.item_selected.connect(func(idx: int) -> void:
@@ -85,16 +85,16 @@ func _add_edit(setting: Setting) -> void:
         slider.editable = !setting.is_readonly()
         slider.min_value = setting.get_meta("min", 0)
         slider.max_value = setting.get_meta("max", 100)
-        slider.value = setting.pending_or_value()
+        slider.value = setting.staged_or_value()
         slider.value_changed.connect(func(val: float) -> void:
             setting.set_value(val)
         )
         var label: Label = Label.new()
         hbox.add_child(label)
         if typ == TYPE_INT:
-            label.text = str(int(setting.pending_or_value()))
+            label.text = str(int(setting.staged_or_value()))
         else:
-            label.text = str(setting.pending_or_value())
+            label.text = str(setting.staged_or_value())
         return
     self._add_placeholder_label(setting)
 
@@ -107,10 +107,7 @@ func _add_revert_button(setting: Setting) -> void:
     self._container.add_child(revert_button)
     revert_button.set_meta(&"setting_key", setting.key())
     revert_button.tooltip_text = "Reset to default"
-    if setting.is_pending():
-        revert_button.disabled = setting.pending_value() == setting.default_value()
-    else:
-        revert_button.disabled = setting.value() == setting.default_value()
+    revert_button.disabled = setting.staged_or_value() == setting.default_value()
     revert_button.pressed.connect(func() -> void: setting.revert())
 
 func _add_placeholder_label(setting: Setting) -> void:
@@ -118,7 +115,7 @@ func _add_placeholder_label(setting: Setting) -> void:
     self._container.add_child(label)
     label.set_meta(&"setting_key", setting.key())
     label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    label.text = str(setting.pending_or_value())
+    label.text = str(setting.staged_or_value())
 
 func _create_option_button(setting: Setting) -> OptionButton:
     var option_button: OptionButton = OptionButton.new()
@@ -145,19 +142,19 @@ func _update() -> void:
             var type_hint: int = setting.get_meta("hint", PROPERTY_HINT_NONE)
             if typ == TYPE_BOOL:
                 (child as OptionButton).disabled = setting.is_readonly()
-                if setting.pending_or_value():
+                if setting.staged_or_value():
                     (child as OptionButton).select(0)
                 else:
                     (child as OptionButton).select(1)
             if (typ == TYPE_INT || typ == TYPE_STRING) && type_hint == PROPERTY_HINT_ENUM:
                 var values: Array[Variant] = setting.get_meta("values", [])
                 (child as OptionButton).disabled = setting.is_readonly()
-                (child as OptionButton).select(values.find(setting.pending_or_value()))
+                (child as OptionButton).select(values.find(setting.staged_or_value()))
             if (typ == TYPE_INT || typ == TYPE_FLOAT) && type_hint == PROPERTY_HINT_RANGE:
-                (child.get_child(0) as HSlider).value = setting.pending_or_value()
+                (child.get_child(0) as HSlider).value = setting.staged_or_value()
                 if typ == TYPE_INT:
-                    (child.get_child(1) as Label).text = str(int(setting.pending_or_value()))
+                    (child.get_child(1) as Label).text = str(int(setting.staged_or_value()))
                 else:
-                    (child.get_child(1) as Label).text = str(setting.pending_or_value())
+                    (child.get_child(1) as Label).text = str(setting.staged_or_value())
         if idx % 3 == 2:
-            (child as Button).disabled = setting.pending_or_value() == setting.default_value()
+            (child as Button).disabled = setting.staged_or_value() == setting.default_value()

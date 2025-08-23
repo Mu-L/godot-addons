@@ -14,12 +14,12 @@ const SettingsContainer := preload("res://examples/app_settings/settings/contain
 func _ready() -> void:
     AppSettings.settings_applied.connect(self._on_settings_applied)
     AppSettings.settings_changed.connect(self._on_settings_changed)
-    AppSettings.settings_pending_changed.connect(self._on_settings_pending_changed)
-    # connecting to applied, changed and pending_changed signals can lead to performance issues
-    # they will be emitted immediately after the setting is applied, changed or pending changed
+    AppSettings.settings_staged_changed.connect(self._on_settings_staged_changed)
+    # connecting to applied, changed and staged_changed signals can lead to performance issues
+    # they will be emitted immediately after the setting is applied, changed or staged changed
     AppSettings.applied.connect(self._on_setting_applied)
     AppSettings.changed.connect(self._on_setting_changed)
-    AppSettings.pending_changed.connect(self._on_setting_pending_changed)
+    AppSettings.staged_changed.connect(self._on_setting_staged_changed)
 
     self._apply_button.pressed.connect(self._on_apply_button_pressed)
     self._cancel_button.pressed.connect(self._on_cancel_button_pressed)
@@ -51,11 +51,11 @@ func _setup_settings() -> void:
                 container.add_setting(setting)
 
 func _on_apply_button_pressed() -> void:
-    AppSettings.apply_pending()
+    AppSettings.apply_staged_values()
     print(AppSettings.to_config().encode_to_text())
 
 func _on_cancel_button_pressed() -> void:
-    AppSettings.clear_pending()
+    AppSettings.clear_staged_values()
 
 func _on_settings_applied() -> void:
     print("Setting applied")
@@ -63,10 +63,10 @@ func _on_settings_applied() -> void:
 func _on_settings_changed() -> void:
     print("Setting changed")
 
-func _on_settings_pending_changed() -> void:
-    print("Setting pending changed")
-    self._apply_button.disabled = !AppSettings.has_pending()
-    self._cancel_button.disabled = !AppSettings.has_pending()
+func _on_settings_staged_changed() -> void:
+    print("Setting staged changed")
+    self._apply_button.disabled = !AppSettings.has_staged_values()
+    self._cancel_button.disabled = !AppSettings.has_staged_values()
 
 func _on_setting_applied(key: String) -> void:
     print("'%s' applied" % key)
@@ -74,5 +74,5 @@ func _on_setting_applied(key: String) -> void:
 func _on_setting_changed(key: String) -> void:
     print("'%s' changed" % key)
 
-func _on_setting_pending_changed(key: String) -> void:
-    print("'%s' pending changed" % key)
+func _on_setting_staged_changed(key: String) -> void:
+    print("'%s' staged changed" % key)
