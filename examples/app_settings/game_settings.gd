@@ -24,6 +24,10 @@ const GAME_ADVANCED_KI: StringName = &"game/advanced_ki"
 const GRAPHICS_DETAILS: StringName = &"graphics/common/details"
 const GRAPHICS_DISPLAY_WINDOW_MODE: StringName = &"graphics/display/window_mode"
 const GRAPHICS_DISPLAY_VSYNC: StringName = &"graphics/display/vsync"
+const AUDIO_MASTER_VOLUME: StringName = &"audio/master_volume"
+const AUDIO_MUSIC_VOLUME: StringName = &"audio/music_volume"
+const AUDIO_SFX_VOLUME: StringName = &"audio/sfx_volume"
+const AUDIO_VOICE_VOLUME: StringName = &"audio/voice_volume"
 
 ## For localization use TranslationServer.get_loaded_locales() to get available languages.
 ## use "display_values" to set the display names for a list of values or enums.
@@ -90,4 +94,36 @@ static func _static_init() -> void:
     .set_description("Bot level.")
     .set_internal()
     .set_exported(false))
+    AppSettings.add(Setting.new(AUDIO_MASTER_VOLUME, 100)
+    .set_description("Master volume.")
+    .set_staged()
+    .set_validate_fn(func(stg: Setting, val: Variant): return val >= stg.get_meta("min", 0) && val <= stg.get_meta("max", 100))
+    .add_meta("type", TYPE_INT)
+    .add_meta("hint", PROPERTY_HINT_RANGE)
+    .add_meta("min", 0)
+    .add_meta("max", 100))
+    AppSettings.add(Setting.new(AUDIO_MUSIC_VOLUME, 60)
+    .set_description("Master volume.")
+    .set_staged()
+    .set_validate_fn(func(stg: Setting, val: Variant): return val >= stg.get_meta("min", 0) && val <= stg.get_meta("max", 100))
+    .add_meta("type", TYPE_INT)
+    .add_meta("hint", PROPERTY_HINT_RANGE)
+    .add_meta("min", 0)
+    .add_meta("max", 100))
+    AppSettings.add(Setting.new(AUDIO_SFX_VOLUME, 80)
+    .set_description("Master volume.")
+    .set_staged()
+    .set_validate_fn(func(stg: Setting, val: Variant): return val >= stg.get_meta("min", 0) && val <= stg.get_meta("max", 100))
+    .add_meta("type", TYPE_INT)
+    .add_meta("hint", PROPERTY_HINT_RANGE)
+    .add_meta("min", 0)
+    .add_meta("max", 100))
+    AppSettings.add(Setting.new(AUDIO_VOICE_VOLUME, 90)
+    .set_description("Master volume.")
+    .set_staged()
+    .set_validate_fn(func(stg: Setting, val: Variant): return val >= stg.get_meta("min", 0) && val <= stg.get_meta("max", 100))
+    .add_meta("type", TYPE_INT)
+    .add_meta("hint", PROPERTY_HINT_RANGE)
+    .add_meta("min", 0)
+    .add_meta("max", 100))
     AppSettings.apply_all()
