@@ -60,7 +60,7 @@ static func _static_init() -> void:
     # use TranslationServer.get_loaded_locales(), this is just an example
     .add_meta("values", ["en", "de", "fr", "es"])
     .add_meta("display_values", ["english", "deutsch", "français", "español"])
-    # this is an example of using a custom meta key, in this case to hide reverting in the UI
+    # this is an example of using a custom meta key, in this case to hide resetting in the UI
     .add_meta("no_default", true))
     AppSettings.add(Setting.new(GRAPHICS_DETAILS, GraphicDetails.MEDIUM)
     .set_description("Graphic detail level.")

@@ -1,7 +1,7 @@
 extends ScrollContainer
 
 const Setting := preload("res://addons/kenyoni/app_settings/setting.gd")
-const RevertButton := preload("res://examples/app_settings/settings/revert_button.gd")
+const ResetButton := preload("res://examples/app_settings/settings/reset_button.gd")
 
 @export var _container: GridContainer
 
@@ -27,7 +27,7 @@ func add_section(section: String) -> void:
 func add_setting(setting: Setting) -> void:
     self._add_label(setting)
     self._add_edit(setting)
-    self._add_revert_button(setting)
+    self._add_reset_button(setting)
 
 func _add_label(setting: Setting) -> void:
     var label: Label = Label.new()
@@ -98,17 +98,17 @@ func _add_edit(setting: Setting) -> void:
         return
     self._add_placeholder_label(setting)
 
-func _add_revert_button(setting: Setting) -> void:
-    # hide revert button if setting is marked having no default value
+func _add_reset_button(setting: Setting) -> void:
+    # hide reset button if setting is marked having no default value
     if setting.get_meta("no_default", false):
         self._container.add_child(Control.new())
         return
-    var revert_button: RevertButton = RevertButton.new()
-    self._container.add_child(revert_button)
-    revert_button.set_meta(&"setting_key", setting.key())
-    revert_button.tooltip_text = "Reset to default"
-    revert_button.disabled = setting.staged_or_value() == setting.default_value()
-    revert_button.pressed.connect(func() -> void: setting.revert())
+    var reset_button: ResetButton = ResetButton.new()
+    self._container.add_child(reset_button)
+    reset_button.set_meta(&"setting_key", setting.key())
+    reset_button.tooltip_text = "Reset to default"
+    reset_button.disabled = setting.staged_or_value() == setting.default_value()
+    reset_button.pressed.connect(func() -> void: setting.reset())
 
 func _add_placeholder_label(setting: Setting) -> void:
     var label: Label = Label.new()

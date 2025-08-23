@@ -21,7 +21,7 @@ var _apply_fn: Callable = Callable()
 var _validate_fn: Callable = Callable()
 ## Unique identifier (hierarchical, e.g. "graphics/display/fullscreen").
 var _key: StringName
-## The default value, used for revert().
+## The default value, used for reset().
 var _default_value: Variant = null
 
 ## Whether the setting is staged (values go into staged until applied).
@@ -85,9 +85,9 @@ func apply() -> void:
         self._apply_fn.call(self)
     self.applied.emit()
 
-## Revert the setting to its default value.
+## Reset the setting to its default value.
 ## If readonly, this call has no effect.
-func revert() -> void:
+func reset() -> void:
     self._set_value_no_validation(self._default_value)
 
 ## Enable/disable staged mode.
@@ -138,7 +138,7 @@ func staged_or_value() -> Variant:
     return self._value
 
 ## Mark this setting as readonly.
-## Readonly settings cannot be changed via set_value() or revert().
+## Readonly settings cannot be changed via set_value() or reset().
 func set_readonly(readonly: bool = true) -> _KenyoniAppSettingSetting:
     self._is_readonly = readonly
     return self
