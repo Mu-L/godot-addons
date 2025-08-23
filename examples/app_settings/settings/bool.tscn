@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6cpuafwhcuni"]
+
+[ext_resource type="Script" uid="uid://ccs50ia2lpalj" path="res://examples/app_settings/settings/bool.gd" id="1_jmqge"]
+
+[node name="bool" type="CheckBox"]
+offset_right = 24.0
+offset_bottom = 24.0
+script = ExtResource("1_jmqge")

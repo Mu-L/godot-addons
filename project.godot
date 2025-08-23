@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GLogging="*res://addons/glogging/glogging.gd"
+AppSettings="*res://addons/kenyoni/app_settings/g_app_settings.gd"
 
 [debug]
 
