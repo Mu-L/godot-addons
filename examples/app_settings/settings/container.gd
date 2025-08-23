@@ -73,7 +73,7 @@ func _add_edit(setting: Setting) -> void:
         )
         return
     # int, float slider
-    if typ == TYPE_INT || (typ == TYPE_FLOAT) && type_hint == PROPERTY_HINT_RANGE:
+    if (typ == TYPE_INT || typ == TYPE_FLOAT) && type_hint == PROPERTY_HINT_RANGE:
         var hbox: HBoxContainer = HBoxContainer.new()
         self._container.add_child(hbox)
         hbox.set_meta(&"setting_key", setting.key())
@@ -91,11 +91,18 @@ func _add_edit(setting: Setting) -> void:
         )
         var label: Label = Label.new()
         hbox.add_child(label)
-        label.text = str(slider.value)
+        if typ == TYPE_INT:
+            label.text = str(int(setting.pending_or_value()))
+        else:
+            label.text = str(setting.pending_or_value())
         return
     self._add_placeholder_label(setting)
 
 func _add_revert_button(setting: Setting) -> void:
+    # hide revert button if setting is marked having no default value
+    if setting.get_meta("no_default", false):
+        self._container.add_child(Control.new())
+        return
     var revert_button: RevertButton = RevertButton.new()
     self._container.add_child(revert_button)
     revert_button.set_meta(&"setting_key", setting.key())
@@ -148,6 +155,9 @@ func _update() -> void:
                 (child as OptionButton).select(values.find(setting.pending_or_value()))
             if (typ == TYPE_INT || typ == TYPE_FLOAT) && type_hint == PROPERTY_HINT_RANGE:
                 (child.get_child(0) as HSlider).value = setting.pending_or_value()
-                (child.get_child(1) as Label).text = str(setting.pending_or_value())
+                if typ == TYPE_INT:
+                    (child.get_child(1) as Label).text = str(int(setting.pending_or_value()))
+                else:
+                    (child.get_child(1) as Label).text = str(setting.pending_or_value())
         if idx % 3 == 2:
             (child as Button).disabled = setting.pending_or_value() == setting.default_value()
