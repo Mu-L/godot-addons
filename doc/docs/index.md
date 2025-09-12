@@ -16,6 +16,13 @@ Find the releases [here](https://github.com/kenyoni-software/godot-addons/releas
 
 <div class="grid cards" markdown>
 
+-   [App Settings](addons/app_settings.md){ .md-button .center-lg-button }
+
+    ---
+
+    A flexible settings management designed for structured application configuration.
+
+
 -   [AspectRatioResizeContainer](addons/aspect_ratio_resize_container.md){ .md-button .center-lg-button }
 
     ---

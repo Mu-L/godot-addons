@@ -1,17 +1,18 @@
 # App Settings
 
-A hierarchical and flexible settings management library designed for structured application configuration.
+An easy-to-use system for organizing, saving, and updating settings. With built-in support for staging changes and reacting to updates in real time.
 
 This library provides:
 
-- **Typed settings** with support for staged and immediate application of values.  
+- **Staged or immediate settings** with optional custom apply logic
 - **Hierarchical keys** for organized grouping of settings and easy section queries.  
 - **ConfigFile integration** for saving and loading settings.  
 - **Signal-driven updates** to respond to changes in settings efficiently.  
 - **Autoload-ready wrapper** for global access and frame-coalesced signal emission.  
 - **Utilities** for filtering, section extraction, and internal setting management.  
 
-[AppSettings](#appsettings-node): Autoload singleton wrapper for global access.  
+[AppSettings (Node)](#appsettings-node): Autoload singleton wrapper for global access.  
+[AppSettings](#appsettings): App settings manager class.  
 [Setting](#setting): Class representing an individual setting.
 
 [**Download**](https://github.com/kenyoni-software/godot-addons/releases)
@@ -27,6 +28,117 @@ This library provides:
 {{ kny:source "/examples/app_settings/" }}
 
 ## Interface
+
+### AppSettings (Node)
+
+{{ kny:badge extends RefCounted --left-bg }}
+
+{{ kny:source "/addons/kenyoni/app_settings/g_app_settings.gd" "res://addons/kenyoni/app_settings/g_app_settings.gd" }}
+
+This is a node wrapper around the [AppSettings](#appsettings) class for easy use as an autoload singleton. It provides additional signals.
+
+#### Signals
+
+| Name {: .kny-mono-font }                                              | Description                                                |
+| --------------------------------------------------------------------- | ---------------------------------------------------------- |
+| settings_applied() {: .kny-mono-font }                                  | Emitted once per frame if any settings were applied.                 |
+| settings_changed() {: .kny-mono-font }                                  | Emitted once per frame if any effective setting values changed.      |
+| settings_staged_changed() {: .kny-mono-font }                           | Emitted once per frame if any staged values changed or were cleared. |
+| applied(key: {{ kny:godot StringName }}) {: .kny-mono-font }        | Emitted when any setting has been applied.                 |
+| changed(key: {{ kny:godot StringName }}) {: .kny-mono-font }        | Emitted when any setting's effective value changes.        |
+| staged_changed(key: {{ kny:godot StringName }}) {: .kny-mono-font } | Emitted when any staged value has changed or been cleared. |
+
+#### Methods
+
+void add(setting: [Setting](#setting)) {: .kny-mono-font }
+:     Add a new setting to the manager. Throws an error if the key is invalid or already exists. Automatically connects the setting's signals.
+
+{{ kny:godot bool }} has_setting(key: {{ kny:godot StringName }}) const {: .kny-mono-font }
+:     Returns true if a setting with the given key exists.
+
+[Setting](#setting) get_setting(key: {{ kny:godot StringName }}) const {: .kny-mono-font }
+:     Returns the setting for the given key, or null if it does not exist.
+
+void remove(key: {{ kny:godot StringName }}) {: .kny-mono-font }
+:     Remove a setting from the manager by its key. Disconnects its signals and deletes it from internal storage.
+
+{{ kny:godot Array }}[[Setting](#setting)] get_section(section: {{ kny:godot String }}, depth: {{ kny:godot int }}=-1, filter: {{ kny:godot Callable }}=_exclude_internal) const {: .kny-mono-font }
+:     Return all settings within a section. Supports hierarchical depth filtering and optional filter Callable.
+
+{{ kny:godot PackedStringArray }} get_section_names(parent_section: {{ kny:godot String }}="", filter: {{ kny:godot Callable }}=_exclude_internal) const {: .kny-mono-font }
+:     Return the names of subsections within a section.
+
+void apply_all() {: .kny-mono-font }
+:     Apply all settings immediately.
+
+void apply_staged_values() {: .kny-mono-font }
+:     Apply only staged values.
+
+void clear_staged_values() {: .kny-mono-font }
+:     Clear all staged values.
+
+{{ kny:godot bool }} has_staged_values() const {: .kny-mono-font }
+:     Return true if any settings have staged values.
+
+void set_config(config: {{ kny:godot ConfigFile }}) const {: .kny-mono-font }
+:     Set values from a {{ kny:godot ConfigFile }}. Warns about settings that do not exist in the manager.
+
+{{ kny:godot ConfigFile }} to_config(filter: {{ kny:godot Callable }}=_include_exported) const {: .kny-mono-font }
+:     Convert exported settings to a {{ kny:godot ConfigFile }}. Optional filter Callable can exclude certain settings.
+
+### AppSettings
+
+{{ kny:badge extends RefCounted --left-bg }}
+
+{{ kny:source "/addons/kenyoni/app_settings/app_settings.gd" "res://addons/kenyoni/app_settings/app_settings.gd" }}
+
+Manager class for handling multiple [Setting](#setting) instances with hierarchical keys, staged changes, and ConfigFile integration.
+
+#### Signals
+
+| Name {: .kny-mono-font }                                              | Description                                                |
+| --------------------------------------------------------------------- | ---------------------------------------------------------- |
+| applied(key: {{ kny:godot StringName }}) {: .kny-mono-font }        | Emitted when any setting has been applied.                 |
+| changed(key: {{ kny:godot StringName }}) {: .kny-mono-font }        | Emitted when any setting's effective value changes.        |
+| staged_changed(key: {{ kny:godot StringName }}) {: .kny-mono-font } | Emitted when any staged value has changed or been cleared. |
+
+#### Methods
+
+void add(setting: [Setting](#setting)) {: .kny-mono-font }
+:     Add a new setting to the manager. Throws an error if the key is invalid or already exists. Automatically connects the setting's signals.
+
+{{ kny:godot bool }} has_setting(key: {{ kny:godot StringName }}) const {: .kny-mono-font }
+:     Returns true if a setting with the given key exists.
+
+[Setting](#setting) get_setting(key: {{ kny:godot StringName }}) const {: .kny-mono-font }
+:     Returns the setting for the given key, or null if it does not exist.
+
+void remove(key: {{ kny:godot StringName }}) {: .kny-mono-font }
+:     Remove a setting from the manager by its key. Disconnects its signals and deletes it from internal storage.
+
+{{ kny:godot Array }}[[Setting](#setting)] get_section(section: {{ kny:godot String }}, depth: {{ kny:godot int }}=-1, filter: {{ kny:godot Callable }}=_exclude_internal) const {: .kny-mono-font }
+:     Return all settings within a section. Supports hierarchical depth filtering and optional filter Callable.
+
+{{ kny:godot PackedStringArray }} get_section_names(parent_section: {{ kny:godot String }}="", filter: {{ kny:godot Callable }}=_exclude_internal) const {: .kny-mono-font }
+:     Return the names of subsections within a section.
+
+void apply_all() {: .kny-mono-font }
+:     Apply all settings immediately.
+
+void apply_staged_values() {: .kny-mono-font }
+:     Apply only staged values.
+
+void clear_staged_values() {: .kny-mono-font }
+:     Clear all staged values.
+
+{{ kny:godot bool }} has_staged_values() const {: .kny-mono-font }
+:     Return true if any settings have staged values.
+
+void set_config(config: {{ kny:godot ConfigFile }}) {: .kny-mono-font }
+:     Load settings from a {{ kny:godot ConfigFile }}. Warns about settings that do not exist in the manager.
+
+{{ kny:godot ConfigFile }} to_config(filter: {{ kny:godot Callable }}=_include_exported) const {: .kny-mono-font }
+:     Convert exported settings to a {{ kny:godot ConfigFile }}. Optional filter Callable can exclude certain settings.
 
 ### Setting
 
@@ -117,117 +229,6 @@ void clear_staged_value() {: .kny-mono-font }
 
 [Setting](#setting) add_meta(meta_key: {{ kny:godot StringName }}, val: {{ kny:godot Variant }}) {: .kny-mono-font }
 :     Add arbitrary metadata key/value.
-
-### AppSettings
-
-{{ kny:badge extends RefCounted --left-bg }}
-
-{{ kny:source "/addons/kenyoni/app_settings/app_settings.gd" "res://addons/kenyoni/app_settings/app_settings.gd" }}
-
-Manager class for handling multiple [Setting](#setting) instances with hierarchical keys, staged changes, and ConfigFile integration.
-
-#### Signals
-
-| Name {: .kny-mono-font }                                              | Description                                                |
-| --------------------------------------------------------------------- | ---------------------------------------------------------- |
-| applied(key: {{ kny:godot StringName }}) {: .kny-mono-font }        | Emitted when any setting has been applied.                 |
-| changed(key: {{ kny:godot StringName }}) {: .kny-mono-font }        | Emitted when any setting's effective value changes.        |
-| staged_changed(key: {{ kny:godot StringName }}) {: .kny-mono-font } | Emitted when any staged value has changed or been cleared. |
-
-#### Methods
-
-void add(setting: [Setting](#setting)) {: .kny-mono-font }
-:     Add a new setting to the manager. Throws an error if the key is invalid or already exists. Automatically connects the setting's signals.
-
-{{ kny:godot bool }} has_setting(key: {{ kny:godot StringName }}) const {: .kny-mono-font }
-:     Returns true if a setting with the given key exists.
-
-[Setting](#setting) get_setting(key: {{ kny:godot StringName }}) const {: .kny-mono-font }
-:     Returns the setting for the given key, or null if it does not exist.
-
-void remove(key: {{ kny:godot StringName }}) {: .kny-mono-font }
-:     Remove a setting from the manager by its key. Disconnects its signals and deletes it from internal storage.
-
-{{ kny:godot Array }}[[Setting](#setting)] get_section(section: {{ kny:godot String }}, depth: {{ kny:godot int }}=-1, filter: {{ kny:godot Callable }}=_exclude_internal) const {: .kny-mono-font }
-:     Return all settings within a section. Supports hierarchical depth filtering and optional filter Callable.
-
-{{ kny:godot PackedStringArray }} get_section_names(parent_section: {{ kny:godot String }}="", filter: {{ kny:godot Callable }}=_exclude_internal) const {: .kny-mono-font }
-:     Return the names of subsections within a section.
-
-void apply_all() {: .kny-mono-font }
-:     Apply all settings immediately.
-
-void apply_staged_values() {: .kny-mono-font }
-:     Apply only staged values.
-
-void clear_staged_values() {: .kny-mono-font }
-:     Clear all staged values.
-
-{{ kny:godot bool }} has_staged_values() const {: .kny-mono-font }
-:     Return true if any settings have staged values.
-
-{{ kny:godot ConfigFile }} to_config(filter: {{ kny:godot Callable }}={{ kny:godot Callable }}()) const {: .kny-mono-font }
-:     Convert exported settings to a {{ kny:godot ConfigFile }}. Optional filter Callable can exclude certain settings.
-
-void load_config(config: {{ kny:godot ConfigFile }}) {: .kny-mono-font }
-:     Load settings from a {{ kny:godot ConfigFile }}. Warns about settings that do not exist in the manager.
-
-### AppSettings (Node)
-
-{{ kny:badge extends RefCounted --left-bg }}
-
-{{ kny:source "/addons/kenyoni/app_settings/g_app_settings.gd" "res://addons/kenyoni/app_settings/g_app_settings.gd" }}
-
-This is a node wrapper around the [AppSettings](#appsettings) class for easy use as an autoload singleton. It provides additional signals.
-
-#### Signals
-
-| Name {: .kny-mono-font }                                              | Description                                                |
-| --------------------------------------------------------------------- | ---------------------------------------------------------- |
-| settings_applied() {: .kny-mono-font }                                  | Emitted once per frame if any settings were applied.                 |
-| settings_changed() {: .kny-mono-font }                                  | Emitted once per frame if any effective setting values changed.      |
-| settings_staged_changed() {: .kny-mono-font }                           | Emitted once per frame if any staged values changed or were cleared. |
-| applied(key: {{ kny:godot StringName }}) {: .kny-mono-font }        | Emitted when any setting has been applied.                 |
-| changed(key: {{ kny:godot StringName }}) {: .kny-mono-font }        | Emitted when any setting's effective value changes.        |
-| staged_changed(key: {{ kny:godot StringName }}) {: .kny-mono-font } | Emitted when any staged value has changed or been cleared. |
-
-#### Methods
-
-void add(setting: [Setting](#setting)) {: .kny-mono-font }
-:     Add a new setting to the manager. Throws an error if the key is invalid or already exists. Automatically connects the setting's signals.
-
-{{ kny:godot bool }} has_setting(key: {{ kny:godot StringName }}) const {: .kny-mono-font }
-:     Returns true if a setting with the given key exists.
-
-[Setting](#setting) get_setting(key: {{ kny:godot StringName }}) const {: .kny-mono-font }
-:     Returns the setting for the given key, or null if it does not exist.
-
-void remove(key: {{ kny:godot StringName }}) {: .kny-mono-font }
-:     Remove a setting from the manager by its key. Disconnects its signals and deletes it from internal storage.
-
-{{ kny:godot Array }}[[Setting](#setting)] get_section(section: {{ kny:godot String }}, depth: {{ kny:godot int }}=-1, filter: {{ kny:godot Callable }}=_exclude_internal) const {: .kny-mono-font }
-:     Return all settings within a section. Supports hierarchical depth filtering and optional filter Callable.
-
-{{ kny:godot PackedStringArray }} get_section_names(parent_section: {{ kny:godot String }}="", filter: {{ kny:godot Callable }}=_exclude_internal) const {: .kny-mono-font }
-:     Return the names of subsections within a section.
-
-void apply_all() {: .kny-mono-font }
-:     Apply all settings immediately.
-
-void apply_staged_values() {: .kny-mono-font }
-:     Apply only staged values.
-
-void clear_staged_values() {: .kny-mono-font }
-:     Clear all staged values.
-
-{{ kny:godot bool }} has_staged_values() const {: .kny-mono-font }
-:     Return true if any settings have staged values.
-
-{{ kny:godot ConfigFile }} to_config(filter: {{ kny:godot Callable }}={{ kny:godot Callable }}()) const {: .kny-mono-font }
-:     Convert exported settings to a {{ kny:godot ConfigFile }}. Optional filter Callable can exclude certain settings.
-
-void load_config(config: {{ kny:godot ConfigFile }}) const {: .kny-mono-font }
-:     Load settings from a {{ kny:godot ConfigFile }}. Warns about settings that do not exist in the manager.
 
 ## Changelog
 
