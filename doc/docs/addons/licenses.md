@@ -151,6 +151,10 @@ License class.
 
 ## Changelog
 
+### 1.10.0
+
+- Improve creation of license from plugin
+
 ### 1.9.3
 
 - Fix filesystem context menu showing license file
