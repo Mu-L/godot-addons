@@ -17,84 +17,71 @@ jobs:
             id: "aspect_ratio_resize_container",
             id-name: "aspect_ratio_resize_container",
             name: "AspectRatioResizeContainer",
-            asset-id: "2089",
           }
           - {
             id: "custom_theme_overrides",
             id-name: "custom_theme_overrides",
             name: "Custom Theme Overrides",
-            asset-id: "2091",
           }
           - {
             id: "git_sha_project_setting",
             id-name: "git_sha_project_setting",
             name: "Git SHA Project Setting",
-            asset-id: "1979",
           }
           - {
             id: "glogging",
             id-name: "glogging",
             name: "GLogging",
-            asset-id: "no-deploy",
           }
           - {
             id: "hide_private_properties",
             id-name: "hide_private_properties",
             name: "Hide Private Properties",
-            asset-id: "1989",
           }
           - {
             id: "icon_explorer",
             id-name: "icon_explorer",
             name: "Icon Explorer",
-            asset-id: "2511",
           }
           - {
             id: "icons_patcher",
             id-name: "icons_patcher",
             name: "Icons Patcher",
-            asset-id: "1980",
-          }
-          - {
-            id: "licenses",
-            id-name: "licenses",
-            name: "License Manager",
-            asset-id: "1969",
           }
           - {
             id: "kenyoni/plugin_reloader",
             id-name: "plugin_reloader",
             name: "Plugin Reloader",
-            asset-id: "no-deploy",
           }
           - {
             id: "kenyoni/pot_generation",
             id-name: "pot_generation",
             name: "POT Generation",
-            asset-id: "no-deploy",
           }
           - {
             id: "kenyoni/remove_orphan_uid",
             id-name: "remove_orphan_uid",
             name: "Remove Orphan UID",
-            asset-id: "no-deploy",
+          }
+          - {
+            id: "licenses",
+            id-name: "licenses",
+            name: "License Manager",
           }
           - {
             id: "qr_code",
             id-name: "qr_code",
             name: "QR Code",
-            asset-id: "2090",
           }
           - {
             id: "texture_button_colored",
             id-name: "texture_button_colored",
             name: "TextureButtonColored",
-            asset-id: "2092",
           }
 
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: Update environment
         run: |
@@ -102,7 +89,7 @@ jobs:
           sudo apt install -y golang
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Fix git ownership
         run: |
@@ -160,12 +147,12 @@ jobs:
       - addon
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           path: archives
 
