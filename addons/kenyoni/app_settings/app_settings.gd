@@ -108,13 +108,25 @@ func has_staged_values() -> bool:
             return true
     return false
 
+## Set values from a ConfigFile.
+func set_config(config: ConfigFile) -> void:
+    for section: String in config.get_sections():
+        for key: String in config.get_section_keys(section):
+            var setting: Setting = self.get_setting(section.path_join(key))
+            if setting == null:
+                push_warning("Setting '%s/%s' not found.".format(section, key))
+                continue
+            # checking readonly is duplicated here, but it might be possible that set_value might push a warning when trying to set a readonly setting
+            if setting.is_exported() && !setting.is_readonly():
+                setting.set_value(config.get_value(section, key))
+
 ## Convert exported settings to a ConfigFile.
 ## - `filter` Callable[[Setting], bool] can be used to include only specific settings.
-func to_config(filter: Callable = Callable()) -> ConfigFile:
+func to_config(filter: Callable = _include_exported) -> ConfigFile:
     var config: ConfigFile = ConfigFile.new()
     for key: StringName in self._settings:
         var setting: Setting = self.get_setting(key)
-        if !setting.is_exported() || filter.is_valid() && !filter.call(setting):
+        if filter.is_valid() && !filter.call(setting):
             continue
         if _get_key_level(key) > 0:
             var keys: PackedStringArray = key.rsplit("/", true, 1)
@@ -122,16 +134,6 @@ func to_config(filter: Callable = Callable()) -> ConfigFile:
         else:
             config.set_value("", key, setting.value())
     return config
-
-## Load settings from a ConfigFile.
-func load_config(config: ConfigFile) -> void:
-    for section: String in config.get_sections():
-        for key: String in config.get_section_keys(section):
-            var value: Variant = config.get_value(section, key)
-            if self.has_setting(section.path_join(key)):
-                self.get_setting(section.path_join(key)).set_value(value)
-            else:
-                push_warning("Setting '%s/%s' not found.".format(section, key))
 
 func _on_setting_applied(setting: Setting) -> void:
     self.applied.emit(setting.key())
@@ -162,3 +164,6 @@ static func _get_key_part(key: StringName, level: int) -> String:
 
 static func _exclude_internal(setting: Setting) -> bool:
     return !setting.is_internal()
+
+static func _include_exported(setting: Setting) -> bool:
+    return setting.is_exported()

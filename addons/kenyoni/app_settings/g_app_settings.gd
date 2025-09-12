@@ -88,14 +88,14 @@ func clear_staged_values() -> void:
 func has_staged_values() -> bool:
     return self._settings.has_staged_values()
 
+## Set values from a ConfigFile.
+func set_config(config: ConfigFile) -> void:
+    self._settings.set_config(config)
+
 ## Convert exported settings to a ConfigFile.
 ## - `filter` Callable[[Setting], bool] can be used to include only specific settings.
-func to_config(filter: Callable = Callable()) -> ConfigFile:
+func to_config(filter: Callable = AppSettingsClass._include_exported) -> ConfigFile:
     return self._settings.to_config(filter)
-
-## Load settings from a ConfigFile.
-func load_config(config: ConfigFile) -> void:
-    self._settings.load_config(config)
 
 func _on_applied(key: StringName) -> void:
     self._settings_applied = true
