@@ -4,6 +4,13 @@ POT generation with files, directories and filters.
 
 [**Download**](https://github.com/kenyoni-software/godot-addons/releases)
 
+The filters are applied as glob patterns, for example:
+
+- `*.gd` to include all GDScript files
+- `*.tscn` to include all scene files
+
+You can split multiple patterns with commas, for example: `*.gd,*.tscn`.
+
 ## Compatibility
 
 | Godot | Version  |
@@ -17,6 +24,10 @@ POT generation with files, directories and filters.
 ![POT generation screenshot](pot_generation/pot_generation.png "POT Generation")
 
 ## Changelog
+
+### 1.1.1
+
+- Fix: Refresh tree when filter changed
 
 ### 1.1.0
 

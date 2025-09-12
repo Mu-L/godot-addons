@@ -87,7 +87,7 @@ func _on_item_edited() -> void:
         return
     item.set_tooltip_text(0, self._get_path(item))
     item.set_tooltip_text(1, "\n".join(Utils.get_filter_from_string(self._get_filter_text(item))))
-    if self.show_filtered_files && self._get_filter_text(item).ends_with("/"):
+    if self.show_filtered_files && self._get_path(item).ends_with("/"):
         self._remove_children(item)
         self._add_filtered_files(item)
     self.paths_changed.emit(self.get_paths())
