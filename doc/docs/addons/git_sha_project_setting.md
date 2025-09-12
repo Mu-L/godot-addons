@@ -9,12 +9,12 @@ It will be automatically set and updated when you run any scene or export the pr
 
 The Git SHA will **not** be kept in `project.godot` to not clutter any version control system. It will be removed from the settings on closing the Godot Editor.
 
-[**Download**](https://github.com/kenyoni-software/godot-addons/releases)
+[**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 ## Compatibility
 
 | Godot | Version  |
-|-------|----------|
+| ----- | -------- |
 | 4.4   | >= 2.1.0 |
 | 4.3   | >= 2.1.0 |
 | 4.2   | >= 2.1.0 |

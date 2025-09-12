@@ -12,7 +12,7 @@ You can remove the main screen button in the options, the editor has to be resta
 
     You are not required to credit this plugin in your in-app credits, as it is only used within the editor and not in the final product. However, you may do so if you wish.
 
-[**Download**](https://github.com/kenyoni-software/godot-addons/releases)
+[**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 **Available collections**
 

@@ -2,12 +2,12 @@
 
 POT generation with files, directories and filters.
 
-[**Download**](https://github.com/kenyoni-software/godot-addons/releases)
+[**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 ## Compatibility
 
 | Godot | Version  |
-|-------|----------|
+| ----- | -------- |
 | 4.4   | >= 1.0.0 |
 | 4.3   | >= 1.0.0 |
 | 4.2   | >= 1.0.0 |

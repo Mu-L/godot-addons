@@ -2,7 +2,7 @@
 
 QR Code generation either with the included `QRCodeRect` node or use the encoding result of the `QRCode` class.
 
-[**Download**](https://github.com/kenyoni-software/godot-addons/releases)
+[**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 ## Compatibility
 

@@ -5,7 +5,7 @@ Logging methods support formatting, values won't be stringified if they are not 
 
 Logging into a file is not supported. The output will be always done via print.
 
-[**Download**](https://github.com/kenyoni-software/godot-addons/releases)
+[**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 ## Compatibility
 
