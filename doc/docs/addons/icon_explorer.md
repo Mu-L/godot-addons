@@ -2,11 +2,9 @@
 
 Browse and save icons from popular icon collections.
 
-You will find the Icon Explorer under `Project -> Tools -> Icon Explorer...` or directly in the main screen.
+You will find the Icon Explorer under `Project -> Tools -> Icon Explorer...` or directly in the main screen. You can install or update the icon collections via the options menu in the upper right corner. This process may take several minutes. If you prefer a cleaner workspace, you can disable the main screen button in the options. Note that the editor needs to be restarted for this change to take effect.
 
-Install or update them via the options menu in the right upper corner. This can take several minutes.
-
-You can remove the main screen button in the options, the editor has to be restarted to take it into effect.
+The tool supports filtering by collection and searching icons by name. You can save icons in white or with their original colors, change the preview color and size and choose whether to browse icons as a popup or from the main screen.
 
 !!! note "Credits"
 

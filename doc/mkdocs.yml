@@ -49,7 +49,7 @@ plugins:
   - kny_badge
   - kny_godot_ref
   - kny_common:
-      tablesort: true
+      tablesort: "latest"
   - kny_source_ref:
       source_url: "https://github.com/kenyoni-software/godot-addons/tree/main"
   - minify:
