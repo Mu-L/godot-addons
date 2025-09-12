@@ -7,7 +7,7 @@ var _zip_path: String
 var _output_path: String
 ## Callable[[String], String]
 ## The extract hook can return a relative path to the output path or an absolute path. Returning an empty string will skip the file.
-var _extract_hook: Variant = null
+var _extract_hook: Callable = Callable()
 
 var _processed: int = 0:
     get = processed_files
@@ -51,7 +51,7 @@ func error_message() -> String:
     self._error_guard.unlock()
     return value
 
-func _init(extract_hook: Variant = null) -> void:
+func _init(extract_hook: Callable = Callable()) -> void:
     self._extract_hook = extract_hook
 
 ## The completed signal is called right before it returns.
@@ -115,9 +115,9 @@ func _add_processed(val: int) -> void:
     self._progress_guard.unlock()
 
 func _get_output_path(path: String) -> String:
-    if self._extract_hook == null:
+    if !self._extract_hook.is_valid():
         return self._output_path.path_join(path)
-    var file_out_path: String = (self._extract_hook as Callable).call(path)
+    var file_out_path: String = self._extract_hook.call(path)
     if file_out_path == "":
         return ""
     if file_out_path.is_absolute_path():
