@@ -1,5 +1,6 @@
 extends PanelContainer
 
+# alternatively you can use AppSettings.Setting
 const Setting := preload("res://addons/kenyoni/app_settings/setting.gd")
 # instead of preloading you can register it as an autoload AFTER AppSettings
 # this scripts registers all settings
@@ -49,6 +50,20 @@ func _setup_settings() -> void:
             container.add_section(sub_section.capitalize())
             for setting: Setting in AppSettings.get_section(section.path_join(sub_section)):
                 container.add_setting(setting)
+
+const SETTINGS_FILE: String = "user://settings.cfg"
+
+func save() -> Error:
+    return AppSettings.to_config().save(SETTINGS_FILE)
+
+func load() -> Error:
+    var cfg: ConfigFile = ConfigFile.new()
+    var err: Error = cfg.load(SETTINGS_FILE)
+    if err != Error.OK:
+        return err
+    AppSettings.set_config(cfg)
+
+    return Error.OK
 
 func _on_apply_button_pressed() -> void:
     AppSettings.apply_staged_values()
