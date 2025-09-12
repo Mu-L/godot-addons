@@ -78,4 +78,4 @@ func _on_scan_button_pressed() -> void:
 func _on_tree_button_clicked(item: TreeItem, column: int, id: int, mouse_button_index: int) -> void:
     EditorInterface.open_scene_from_path(item.get_metadata(0) as String)
     EditorInterface.get_selection().clear()
-    EditorInterface.get_selection().add_node(EditorInterface.get_edited_scene_root().get_node(item.get_metadata(1) as String))
+    EditorInterface.inspect_object(EditorInterface.get_edited_scene_root().get_node(item.get_metadata(1) as String), item.get_metadata(2) as String, true)
