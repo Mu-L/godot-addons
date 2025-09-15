@@ -1,7 +1,7 @@
 const MDI_DIRECTORY_PATH: String = "plugins/icons_patcher/material_design_directory"
 
 static func init_project_setting(key: String, default_value: Variant, type: int, type_hint: int) -> void:
-    if not ProjectSettings.has_setting(key):
+    if !ProjectSettings.has_setting(key):
         ProjectSettings.set_setting(key, default_value)
     ProjectSettings.set_initial_value(key, default_value)
     ProjectSettings.add_property_info({
