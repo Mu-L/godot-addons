@@ -1,3 +1,4 @@
+@abstract
 extends RefCounted
 
 const Collection := preload("res://addons/icon_explorer/internal/scripts/collection.gd")
@@ -22,7 +23,7 @@ var sort_priority: int
 # - keyword is part of category or search term
 # 0:
 # - will not be displayed
-func match(keyword: String) -> int:
+func match(_keyword: String) -> int:
     return 0
 
 # return either 10, 9 or 0

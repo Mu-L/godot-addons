@@ -1,3 +1,4 @@
+@abstract
 extends RefCounted
 
 const Io := preload("res://addons/icon_explorer/internal/scripts/tools/io.gd")
@@ -29,15 +30,13 @@ func color_icon(buffer: String, color: String) -> String:
 
 # VIRTUAL
 # called in a thread
-func load() -> Array[Icon]:
-    assert(false, "virtual function")
-    return []
+@abstract
+func load() -> Array[Icon]
 
 # VIRTUAL
 # called in a thread
-func install(http: HTTPRequest, version: String) -> Error:
-    assert(false, "virtual function")
-    return Error.FAILED
+@abstract
+func install(http: HTTPRequest, version: String) -> Error
 
 # VIRTUAL
 # called in a thread
@@ -47,9 +46,8 @@ func remove() -> Error:
     return Error.FAILED
 
 # VIRTUAL
-func icon_directory() -> String:
-    assert(false, "virtual function")
-    return ""
+@abstract
+func icon_directory() -> String
 
 # VIRTUAL
 func update_latest_version(http: HTTPRequest) -> void:
