@@ -6,7 +6,7 @@ description: Kenyoni Godot Addons is a pack of useful Godot additions to make yo
 
 Kenyoni Godot Addons is a pack of useful Godot additions to make your life easier!
 
-Find the releases [here](https://github.com/kenyoni-software/godot-addons/releases/tag/latest).
+Find the latest releases [here](https://github.com/kenyoni-software/godot-addons/releases/tag/latest) or add it to your Library in the [Godot Store](https://store-beta.godotengine.org/publisher/kenyoni/).
 
 !!! note "Godot 4.3. or lower"
 

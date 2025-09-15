@@ -8,12 +8,13 @@ This works except for `STRETCH_MODE_COVER`.
 
     The `custom_minimum_size` property is no longer available, as it is now used to define the minimum size.
 
-[**Download**](https://github.com/kenyoni-software/godot-addons/releases)
+[**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 ## Compatibility
 
 | Godot | Version  |
-|-------|----------|
+| ----- | -------- |
+| 4.5   | >= 3.1.0 |
 | 4.4   | >= 3.1.0 |
 | 4.3   | >= 3.1.0 |
 | 4.2   | >= 3.1.0 |

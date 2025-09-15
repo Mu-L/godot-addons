@@ -93,7 +93,7 @@ func update() -> void:
 
     var icons: Array[Icon] = self._db.icons().duplicate()
     var filter_popup: PopupMenu = self._filter_options.get_popup()
-    for icon in icons:
+    for icon: Icon in icons:
         if !filter_popup.is_item_checked(filter_popup.get_item_index(icon.collection.id())):
             icon.sort_priority = 0
             continue
@@ -103,7 +103,7 @@ func update() -> void:
             icon.sort_priority = icon.match(filter)
     icons.sort_custom(Icon.compare)
     var color: Color = self._preview_color.color
-    for icon in icons:
+    for icon: Icon in icons:
         if icon.sort_priority == 0:
             continue
         var idx: int = self._icon_list.add_item(icon.name, icon.texture)

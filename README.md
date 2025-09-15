@@ -3,8 +3,9 @@
 ![maintained](https://img.shields.io/badge/Status-maintained-brightgreen.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/IceflowRE/go-multiprogressbar/blob/master/LICENSE.md)
 [![documentation](https://img.shields.io/badge/Documentation-D1D100.svg)](https://kenyoni-software.github.io/godot-addons)
+[![godot-store](https://img.shields.io/badge/Godot%20Store-478CBF.svg)](https://store-beta.godotengine.org/publisher/kenyoni/)
 
-Download [here](https://github.com/kenyoni-software/godot-addons/releases/tag/latest).
+Download the latest releases [here](https://github.com/kenyoni-software/godot-addons/releases/tag/latest) or add it to your Library in the [Godot Store](https://store-beta.godotengine.org/publisher/kenyoni/).
 
 You can find a documentation with examples and detailed information [here](https://kenyoni-software.github.io/godot-addons).
 

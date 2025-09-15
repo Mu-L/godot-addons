@@ -39,8 +39,8 @@ func _exit_tree() -> void:
     self._file_watcher = null
     LicensesInterface.remove_interface()
 
-static func set_project_setting(key: String, initial_value, type: Variant.Type, type_hint: PropertyHint, hint_string: String = "") -> void:
-    if not ProjectSettings.has_setting(key):
+static func set_project_setting(key: String, initial_value: Variant, type: Variant.Type, type_hint: PropertyHint, hint_string: String = "") -> void:
+    if !ProjectSettings.has_setting(key):
         ProjectSettings.set_setting(key, initial_value)
     ProjectSettings.set_initial_value(key, initial_value)
     var props: Dictionary = {

@@ -8,18 +8,18 @@ const LEVEL_ERROR: int = 40
 const LEVEL_CRITICAL: int = 50
 
 static func level_to_str(level: int) -> String:
-    return Logger.level_to_str(level)
+    return GLogger.level_to_str(level)
 
 ## Logger class with a fixed name and log level.
 ## Use level LEVEL_NOTSET to use log level of parent.
-class Logger:
+class GLogger:
     extends RefCounted
 
     var name: String = "root"
     var _log_level: int = LEVEL_NOTSET
-    var parent: Logger = null
+    var parent: GLogger = null
 
-    func _init(module_name: String, log_level: int = LEVEL_NOTSET, parent: Logger = null) -> void:
+    func _init(module_name: String, log_level: int = LEVEL_NOTSET, parent: GLogger = null) -> void:
         self.name = module_name
         self.set_log_level(log_level)
         self.parent = parent
@@ -32,8 +32,8 @@ class Logger:
             return self.parent.log_level()
         return self._log_level
 
-    func create_child(module_name: String, log_level: int = LEVEL_NOTSET) -> Logger:
-        return Logger.new(module_name, log_level, self)
+    func create_child(module_name: String, log_level: int = LEVEL_NOTSET) -> GLogger:
+        return GLogger.new(module_name, log_level, self)
 
     func debug(message: Variant, values: Array[Variant] = []) -> void:
         self.log(LEVEL_DEBUG, message, values)
@@ -84,7 +84,7 @@ class Logger:
             LEVEL_WARNING:
                 push_warning(msg)
 
-var root_logger: Logger = Logger.new("root", LEVEL_DEBUG)
+var root_logger: GLogger = GLogger.new("root", LEVEL_DEBUG)
 
 func debug(message: Variant, values: Array[Variant] = []) -> void:
     self.root_logger.log(LEVEL_DEBUG, message, values)

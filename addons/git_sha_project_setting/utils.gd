@@ -1,7 +1,7 @@
 const GIT_SHA_PATH: String = "application/config/git_sha"
 
 static func init_project_setting(key: String, default_value: Variant, type: Variant.Type, type_hint: PropertyHint) -> void:
-    if not ProjectSettings.has_setting(key):
+    if !ProjectSettings.has_setting(key):
         ProjectSettings.set_setting(key, default_value)
     ProjectSettings.set_initial_value(key, default_value)
     ProjectSettings.add_property_info({
@@ -33,7 +33,7 @@ static func update_git_sha() -> bool:
 
 static func get_git_sha() -> GitResult:
     # no git is ok
-    if not FileAccess.file_exists("res://.git/HEAD"):
+    if !FileAccess.file_exists("res://.git/HEAD"):
         return GitResult.new("", "")
     var file: FileAccess = FileAccess.open("res://.git/HEAD", FileAccess.READ)
     if file == null:

@@ -5,16 +5,17 @@ Logging methods support formatting, values won't be stringified if they are not 
 
 Logging into a file is not supported. The output will be always done via print.
 
-[**Download**](https://github.com/kenyoni-software/godot-addons/releases)
+[**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 ## Compatibility
 
-| Godot | Version  |
-|-------|----------|
-| 4.4   | >= 1.5.0 |
-| 4.3   | >= 1.5.0 |
-| 4.2   | >= 1.5.0 |
-| 4.1   | <= 1.4.1 |
+| Godot | Version       |
+| ----- | ------------- |
+| 4.5   | >= 2.0.0      |
+| 4.4   | 1.5.0 - 1.6.1 |
+| 4.3   | 1.5.0 - 1.6.1 |
+| 4.2   | 1.5.0 - 1.6.1 |
+| 4.1   | <= 1.4.1      |
 
 ## Example
 
@@ -36,6 +37,10 @@ Example output.
 
 ## Interface
 
+!!! note "Godot 4.5. or higher"
+
+    Due to Godot adding it's own `Logger` class, the class is renamed to `GLogger` in 2.0.0 and higher.
+
 ### GLogging
 
 {{ kny:source "/addons/glogging/glogging.gd" "res://addons/glogging/glogging.gd" }}
@@ -44,14 +49,14 @@ Logging base class. Provides helper methods.
 
 #### Properties
 
-| Name                            | Type                                          | Description         |
-|---------------------------------|-----------------------------------------------|---------------------|
-| root_logger {: .kny-mono-font } | [Logger](#glogginglogger) {: .kny-mono-font } | root logger object. |
+| Name                            | Type                                            | Description         |
+| ------------------------------- | ----------------------------------------------- | ------------------- |
+| root_logger {: .kny-mono-font } | [GLogger](#gloggingglogger) {: .kny-mono-font } | root logger object. |
 
 #### Constants
 
 | Name                               | Type                | Value | Description            |
-|------------------------------------|---------------------|-------|------------------------|
+| ---------------------------------- | ------------------- | ----- | ---------------------- |
 | LEVEL_NOTSET {: .kny-mono-font }   | {{ kny:godot int }} | 0     | Logging level not set. |
 | LEVEL_DEBUG {: .kny-mono-font }    | {{ kny:godot int }} | 10    |                        |
 | LEVEL_INFO {: .kny-mono-font }     | {{ kny:godot int }} | 20    |                        |
@@ -61,25 +66,25 @@ Logging base class. Provides helper methods.
 
 #### Methods
 
-void debug ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values ) const {: .kny-mono-font }
+void debug(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log with root logger at debug level
 
-void info ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values ) const {: .kny-mono-font }
+void info(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log with root logger at info level
 
-void warning ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values ) const {: .kny-mono-font }
+void warning(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log with root logger at warning level, will also display a debug warning
 
-void error ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values ) const {: .kny-mono-font }
+void error(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     with root logger at error level, will also display a debug error
 
-void critical ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values ) const {: .kny-mono-font }
+void critical(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log with root logger at critical level
 
-void log ( {{ kny:godot int }} level, {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values ) const {: .kny-mono-font }
+void log(level: {{ kny:godot int }}, message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log at a custom level
 
-### GLogging.Logger
+### GLogging.GLogger
 
 {{ kny:badge extends RefCounted }}
 
@@ -90,34 +95,38 @@ If not log level is set, the log level of the parent logger will be used.
 
 #### Methods
 
-[Logger](#glogginglogger) create_child ( {{ kny:godot String }} module_name, {{ kny:godot int }} log_level=LEVEL_NOTSET) const {: .kny-mono-font }
+[GLogger](#gloggingglogger) create_child(module_name: {{ kny:godot String }}, log_level: {{ kny:godot int }}=LEVEL_NOTSET) const {: .kny-mono-font }
 :     create a child logger
 
-void set_log_level ( {{ kny:godot int }} level ) {: .kny-mono-font }
+void set_log_level(level: {{ kny:godot int }}) {: .kny-mono-font }
 :     set the log level
 
-{{ kny:godot int }} log_level () const {: .kny-mono-font }
+{{ kny:godot int }} log_level() const {: .kny-mono-font }
 :     get log level
 
-void debug ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values) const {: .kny-mono-font }
+void debug(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log at debug level
 
-void info ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values) const {: .kny-mono-font }
+void info(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log at info level
 
-void warning ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values) const {: .kny-mono-font }
+void warning(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log at warning level, will also display a debug warning
 
-void error ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values) const {: .kny-mono-font }
+void error(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log at error level, will also display a debug error
 
-void critical ( {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values) const {: .kny-mono-font }
+void critical(message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log at critical level
 
-void log ( {{ kny:godot int }} level, {{ kny:godot Variant }} message, {{ kny:godot Array }}[{{ kny:godot Variant }}]=[] values) const {: .kny-mono-font }
+void log(level: {{ kny:godot int }}, message: {{ kny:godot Variant }}, values: {{ kny:godot Array }}[{{ kny:godot Variant }}]=[]) const {: .kny-mono-font }
 :     log at custom level
 
 ## Changelog
+
+### 2.0.0
+
+- Rename `Logger` to `GLogger` (Godot has a `Logger` class now)
 
 ### 1.6.1
 

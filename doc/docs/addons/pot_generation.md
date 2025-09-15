@@ -2,7 +2,7 @@
 
 POT generation with files, directories and filters.
 
-[**Download**](https://github.com/kenyoni-software/godot-addons/releases)
+[**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 The filters are applied as glob patterns, for example:
 
@@ -14,7 +14,8 @@ You can split multiple patterns with commas, for example: `*.gd,*.tscn`.
 ## Compatibility
 
 | Godot | Version  |
-|-------|----------|
+| ----- | -------- |
+| 4.5   | >= 1.0.0 |
 | 4.4   | >= 1.0.0 |
 | 4.3   | >= 1.0.0 |
 | 4.2   | >= 1.0.0 |

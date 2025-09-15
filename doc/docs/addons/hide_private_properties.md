@@ -8,16 +8,13 @@ This plugin hides exported private properties from instantiated scenes, that the
 You can change this behavior in the editor settings under `Interface -> Inspector -> Hide Private Properties`. It will be enabled by default.  
 To search for overridden properties, this plugin will give you a dialog under `Project -> Tools -> Scan for private property overrides...`
 
-!!! note "Credits"
-
-    You are not required to credit this plugin in your in-app credits, as it is only used within the editor and not in the final product. However, you may do so if you wish.
-
-[**Download**](https://github.com/kenyoni-software/godot-addons/releases)
+[**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 ## Compatibility
 
 | Godot | Version  |
 | ----- | -------- |
+| 4.5   | >= 1.1.0 |
 | 4.4   | >= 1.1.0 |
 | 4.3   | >= 1.1.0 |
 | 4.2   | >= 1.1.0 |
@@ -28,6 +25,10 @@ To search for overridden properties, this plugin will give you a dialog under `P
 {{ kny:source "/examples/hide_private_properties/" }}
 
 ## Changelog
+
+### 1.3.2
+
+- Code improvements
 
 ### 1.3.1
 
