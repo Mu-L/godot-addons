@@ -6,10 +6,6 @@ You will find the Icon Explorer under `Project -> Tools -> Icon Explorer...` or 
 
 The tool supports filtering by collection and searching icons by name. You can save icons in white or with their original colors, change the preview color and size and choose whether to browse icons as a popup or from the main screen.
 
-!!! note "Credits"
-
-    You are not required to credit this plugin in your in-app credits, as it is only used within the editor and not in the final product. However, you may do so if you wish.
-
 [**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 **Available collections**

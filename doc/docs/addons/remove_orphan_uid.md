@@ -8,10 +8,6 @@ Use `Project` -> `Tools` -> `Remove Orphan UID` to remove.
 
     UIDs are only generated since Godot 4.4.
 
-!!! note "Credits"
-
-    You are not required to credit this plugin in your in-app credits, as it is only used within the editor and not in the final product. However, you may do so if you wish.
-
 [**Download**](https://github.com/kenyoni-software/godot-addons/releases/tag/latest)
 
 ## Compatibility
