@@ -8,6 +8,7 @@ QR Code generation either with the included `QRCodeRect` node or use the encodin
 
 | Godot | Version       |
 | ----- | ------------- |
+| 4.5   | >= 1.2.0      |
 | 4.4   | >= 1.2.0      |
 | 4.3   | 1.1.0 - 1.1.3 |
 | 4.2   | 1.1.0 - 1.1.3 |

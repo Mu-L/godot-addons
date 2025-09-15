@@ -18,6 +18,7 @@ You can change the project license file either with a button at the upper right,
 
 | Godot | Version       |
 | ----- | ------------- |
+| 4.5   | >= 1.9.0      |
 | 4.4   | >= 1.9.0      |
 | 4.3   | 1.8.0 - 1.8.3 |
 | 4.2   | 1.6.0 - 1.7.8 |

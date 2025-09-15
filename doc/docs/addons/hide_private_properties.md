@@ -14,6 +14,7 @@ To search for overridden properties, this plugin will give you a dialog under `P
 
 | Godot | Version  |
 | ----- | -------- |
+| 4.5   | >= 1.1.0 |
 | 4.4   | >= 1.1.0 |
 | 4.3   | >= 1.1.0 |
 | 4.2   | >= 1.1.0 |
