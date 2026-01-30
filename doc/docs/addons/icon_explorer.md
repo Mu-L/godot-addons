@@ -52,6 +52,7 @@ As popup:
 - Require Godot 4.6
 - Upgrade scenes to Godot 4.6
 - Improve ProjectSettings changed handling
+- Use `EditorSettings` for storing settings, the `ProjectSettings` are removed
 
 ### 1.5.0
 
