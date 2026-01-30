@@ -1,5 +1,6 @@
 site_name: Kenyoni Godot Addons
 site_url: https://kenyoni-software.github.io/godot-addons
+site_description: A collection of open-source addons for the Godot game engine by Kenyoni Software.
 copyright: "&copy; Copyright 2022-present Kenyoni Software"
 
 extra:
@@ -41,6 +42,9 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde

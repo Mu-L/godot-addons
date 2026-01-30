@@ -1,3 +1,7 @@
+---
+description: "An AspectRatioContainer that can resize itself smaller than its children."
+---
+
 # AspectRatioResizeContainer
 
 The `AspectRatioContainer` allows his own size to be smaller than the children, which causes neighboring UI elements to be covered.
@@ -14,6 +18,7 @@ This works except for `STRETCH_MODE_COVER`.
 
 | Godot | Version  |
 | ----- | -------- |
+| 4.6   | >= 3.1.0 |
 | 4.5   | >= 3.1.0 |
 | 4.4   | >= 3.1.0 |
 | 4.3   | >= 3.1.0 |
@@ -25,6 +30,10 @@ This works except for `STRETCH_MODE_COVER`.
 {{ kny:source "/examples/aspect_ratio_resize_container/" }}
 
 ## Changelog
+
+### 3.4.0
+
+- Upgrade `.import`s to Godot 4.6
 
 ### 3.3.0
 

@@ -1,3 +1,7 @@
+---
+description: "Removes orphan UIDs from the project."
+---
+
 # Remove Orphan UID
 
 Removes orphan UIDs from the project. Orphan UIDs can happen if you delete files outside the editor and do not remove the related uid file.
@@ -14,6 +18,7 @@ Use `Project` -> `Tools` -> `Remove Orphan UID` to remove.
 
 | Godot | Version  |
 | ----- | -------- |
+| 4.6   | >= 1.0.0 |
 | 4.5   | >= 1.0.0 |
 | 4.4   | >= 1.0.0 |
 

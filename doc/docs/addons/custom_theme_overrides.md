@@ -1,3 +1,7 @@
+---
+description: "Utility to make custom theme overrides for any node possible."
+---
+
 # Custom Theme Overrides
 
 Utility to make custom theme overrides for any node possible.
@@ -12,6 +16,7 @@ The custom theme override variables can be handled like every other theme overri
 
 | Godot | Version |
 | ----- | ------- |
+| 4.6   | all     |
 | 4.5   | all     |
 | 4.4   | all     |
 | 4.3   | all     |

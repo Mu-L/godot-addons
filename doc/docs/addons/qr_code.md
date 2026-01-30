@@ -1,3 +1,7 @@
+---
+description: "QR Code generation either with the included QRCodeRect node or use the encoding result of the QRCode class."
+---
+
 # QR Code
 
 QR Code generation either with the included `QRCodeRect` node or use the encoding result of the `QRCode` class.
@@ -8,6 +12,7 @@ QR Code generation either with the included `QRCodeRect` node or use the encodin
 
 | Godot | Version       |
 | ----- | ------------- |
+| 4.6   | >= 1.2.0      |
 | 4.5   | >= 1.2.0      |
 | 4.4   | >= 1.2.0      |
 | 4.3   | 1.1.0 - 1.1.3 |
@@ -152,6 +157,10 @@ Shift JIS encoding utility.
 :     Get text from JIS 8 encoded bytes. Requires an u8 int array. Unknown characters are skipped.
 
 ## Changelog
+
+### 1.3.0
+
+- Upgrade `.import`s to Godot 4.6
 
 ### 1.2.0
 

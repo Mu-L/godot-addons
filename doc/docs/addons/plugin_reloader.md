@@ -1,3 +1,7 @@
+---
+description: "Enable or disable plugins from within the editor main screen."
+---
+
 # Plugin Reloader
 
 Enable or disable plugins from within the editor main screen.
@@ -8,6 +12,7 @@ Enable or disable plugins from within the editor main screen.
 
 | Godot | Version  |
 | ----- | -------- |
+| 4.6   | >= 1.0.0 |
 | 4.5   | >= 1.0.0 |
 | 4.4   | >= 1.0.0 |
 | 4.3   | >= 1.0.0 |
@@ -18,6 +23,10 @@ Enable or disable plugins from within the editor main screen.
 ![plugin reloader screenshot](plugin_reloader/plugin_reloader.png "Plugin Reloader")
 
 ## Changelog
+
+### 1.3.0
+
+- Upgrade scenes to Godot 4.6
 
 ### 1.2.2
 

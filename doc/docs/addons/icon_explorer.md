@@ -1,3 +1,7 @@
+---
+description: "Browse and save icons from popular icon collections."
+---
+
 # Icon Explorer
 
 Browse and save icons from popular icon collections.
@@ -25,6 +29,7 @@ The tool supports filtering by collection and searching icons by name. You can s
 
 | Godot | Version       |
 | ----- | ------------- |
+| 4.6   | >= 1.5.0      |
 | 4.5   | >= 1.5.0      |
 | 4.4   | 1.4.0 - 1.4.4 |
 | 4.3   | 1.2.0 - 1.3.0 |
@@ -41,6 +46,10 @@ As popup:
 ![Icon Explorer screenshot](icon_explorer/popup.png "As Popup")
 
 ## Changelog
+
+### 1.6.0
+
+- Upgrade scenes to Godot 4.6
 
 ### 1.5.0
 

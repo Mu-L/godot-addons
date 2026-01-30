@@ -1,3 +1,7 @@
+---
+description: "Adds a project setting that contains the current Git SHA."
+---
+
 # Git SHA Project Setting
 
 !!! note
@@ -15,6 +19,7 @@ The Git SHA will **not** be kept in `project.godot` to not clutter any version c
 
 | Godot | Version  |
 | ----- | -------- |
+| 4.6   | >= 2.1.0 |
 | 4.5   | >= 2.1.0 |
 | 4.4   | >= 2.1.0 |
 | 4.3   | >= 2.1.0 |

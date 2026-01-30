@@ -1,3 +1,7 @@
+---
+description: "POT generation with files, directories and filters."
+---
+
 # POT Generation
 
 POT generation with files, directories and filters.
@@ -15,6 +19,7 @@ You can split multiple patterns with commas, for example: `*.gd,*.tscn`.
 
 | Godot | Version  |
 | ----- | -------- |
+| 4.6   | >= 1.0.0 |
 | 4.5   | >= 1.0.0 |
 | 4.4   | >= 1.0.0 |
 | 4.3   | >= 1.0.0 |
@@ -25,6 +30,10 @@ You can split multiple patterns with commas, for example: `*.gd,*.tscn`.
 ![POT generation screenshot](pot_generation/pot_generation.png "POT Generation")
 
 ## Changelog
+
+### 1.2.0
+
+- Upgrade scenes to Godot 4.6
 
 ### 1.1.1
 

@@ -1,3 +1,7 @@
+---
+description: "Let you apply the icon color theme properties for the texture button."
+---
+
 # TextureButtonColored
 
 Let you apply the icon color theme properties for the texture button. Uses `self_modulate`.
@@ -8,6 +12,7 @@ Let you apply the icon color theme properties for the texture button. Uses `self
 
 | Godot | Version       |
 | ----- | ------------- |
+| 4.6   | >= 1.4.0      |
 | 4.5   | >= 1.4.0      |
 | 4.4   | >= 1.4.0      |
 | 4.3   | >= 1.4.0      |
@@ -42,6 +47,10 @@ Let you apply the icon color theme properties for the texture button. Uses `self
 | icon_disabled_color {: .kny-mono-font }      | {{ kny:godot Color }} |
 
 ## Changelog
+
+### 1.6.0
+
+- Upgrade `.import`s to Godot 4.6
 
 ### 1.5.1
 

@@ -1,3 +1,7 @@
+---
+description: "Hides exported private properties from instantiated scenes."
+---
+
 # Hide Private Properties
 
 Private members (names starting with an underscore) should not be exposed.
@@ -14,6 +18,7 @@ To search for overridden properties, this plugin will give you a dialog under `P
 
 | Godot | Version  |
 | ----- | -------- |
+| 4.6   | >= 1.1.0 |
 | 4.5   | >= 1.1.0 |
 | 4.4   | >= 1.1.0 |
 | 4.3   | >= 1.1.0 |
@@ -25,6 +30,10 @@ To search for overridden properties, this plugin will give you a dialog under `P
 {{ kny:source "/examples/hide_private_properties/" }}
 
 ## Changelog
+
+### 1.4.0
+
+- Upgrade scenes to Godot 4.6
 
 ### 1.3.2
 

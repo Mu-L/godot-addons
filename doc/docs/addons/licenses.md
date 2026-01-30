@@ -1,3 +1,7 @@
+---
+description: "Manage license and copyright for third party graphics, software or libraries."
+---
+
 # License Manager
 
 Manage license and copyright for third party graphics, software or libraries.
@@ -18,6 +22,7 @@ You can change the project license file either with a button at the upper right,
 
 | Godot | Version       |
 | ----- | ------------- |
+| 4.6   | >= 1.9.0      |
 | 4.5   | >= 1.9.0      |
 | 4.4   | >= 1.9.0      |
 | 4.3   | 1.8.0 - 1.8.3 |
@@ -151,6 +156,10 @@ License class.
 :     Returns a duplicate of itself.
 
 ## Changelog
+
+### 1.11.0
+
+- Upgrade scenes to Godot 4.6
 
 ### 1.10.0
 

@@ -1,3 +1,7 @@
+---
+description: "Patch Material Design icons to white color."
+---
+
 # Icons Patcher
 
 !!! danger "Deprecated"
@@ -16,6 +20,7 @@ Then use `Project` -> `Tools` -> `Icons Patcher` to patch the icons.
 
 | Godot | Version  |
 | ----- | -------- |
+| 4.6   | >= 1.5.0 |
 | 4.5   | >= 1.5.0 |
 | 4.4   | >= 1.5.0 |
 | 4.3   | >= 1.5.0 |
