@@ -32,7 +32,7 @@ func _ready() -> void:
     self._set_license_filepath_button.icon = self.get_theme_icon(&"ImportCheck", &"EditorIcons")
     self._set_license_filepath_button.pressed.connect(self._on_set_license_filepath_clicked)
     self._license_file_edit.text_submitted.connect(self._on_data_file_edit_changed)
-    self._license_file_edit.text = Licenses.get_license_data_filepath()
+    self._license_file_edit.text = ResourceUID.ensure_path(Licenses.get_license_data_filepath())
 
     self._li = LicensesInterface.get_interface()
     self._li.cfg_path_changed.connect(self._on_cfg_file_changed)
@@ -67,7 +67,7 @@ func show_component(comp: Component) -> void:
     self._component_detail_tree.set_component(comp)
 
 func _update_set_license_filepath_button() -> void:
-    if Licenses.get_license_data_filepath() == self._license_file_edit.text:
+    if ResourceUID.ensure_path(Licenses.get_license_data_filepath()) == ResourceUID.ensure_path(self._license_file_edit.text):
         self._set_license_filepath_button.icon = self.get_theme_icon(&"ImportCheck", &"EditorIcons")
         self._set_license_filepath_button.tooltip_text = "Selected file is set as the project license file."
         self._set_license_filepath_button.disabled = true
@@ -135,7 +135,7 @@ func _emit_components_changed():
     self._li.emit_components_changed()
 
 func _on_cfg_file_changed(new_path: String) -> void:
-    self._license_file_edit.text = new_path
+    self._license_file_edit.text = ResourceUID.ensure_path(new_path)
     self._update_set_license_filepath_button()
 
 func _on_project_settings_changed() -> void:

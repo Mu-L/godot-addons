@@ -20,14 +20,14 @@ You can change the project license file either with a button at the upper right,
 
 ## Compatibility
 
-| Godot | Version       |
-| ----- | ------------- |
-| 4.6   | >= 1.9.0      |
-| 4.5   | >= 1.9.0      |
-| 4.4   | >= 1.9.0      |
-| 4.3   | 1.8.0 - 1.8.3 |
-| 4.2   | 1.6.0 - 1.7.8 |
-| 4.1   | <= 1.5.0      |
+| Godot | Version        |
+| ----- | -------------- |
+| 4.6   | >= 1.9.0       |
+| 4.5   | >= 1.9.0       |
+| 4.4   | 1.9.0 - 1.10.0 |
+| 4.3   | 1.8.0 - 1.8.3  |
+| 4.2   | 1.6.0 - 1.7.8  |
+| 4.1   | <= 1.5.0       |
 
 ## Screenshot
 
@@ -160,6 +160,7 @@ License class.
 ### 1.11.0
 
 - Upgrade scenes to Godot 4.6
+- Use `ResourceUID.ensure_path` for path comparisons
 
 ### 1.10.0
 
