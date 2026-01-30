@@ -1,6 +1,6 @@
 {
   "name": "Kenyoni Godot Addons",
-  "image": "mcr.microsoft.com/devcontainers/go:1.23",
+  "image": "mcr.microsoft.com/devcontainers/go:1.25",
   "customizations": {
     "vscode": {
       "extensions": [
