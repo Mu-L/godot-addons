@@ -64,6 +64,8 @@ func _add_plugin_to_list(plugin_path: String) -> void:
         self._option_button.select(idx)
 
 func _on_project_settings_changed() -> void:
+    if !ProjectSettings.check_changed_settings_in_group("editor_plugins/enabled"):
+        return
     for idx: int in range(self._option_button.get_item_count()):
         var plugin_path: String = self._option_button.get_item_metadata(idx)
         if EditorInterface.is_plugin_enabled(plugin_path.path_join("plugin.cfg")):

@@ -54,7 +54,8 @@ func _ready() -> void:
     if Engine.is_editor_hint():
         ProjectSettings.settings_changed.connect(
         func() -> void:
-            self._update_preview_size(ProjectSettings.get_setting("plugins/icon_explorer/preview_size_exp") as float)
+            if ProjectSettings.check_changed_settings_in_group("plugins/icon_explorer/preview_size_exp"):
+                self._update_preview_size(ProjectSettings.get_setting("plugins/icon_explorer/preview_size_exp") as float)
     )
     self._preview_size.value_changed.connect(self._on_preview_size_changed)
     self._detail_panel.preview_color = self._preview_color.color

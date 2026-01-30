@@ -17,13 +17,13 @@ You can split multiple patterns with commas, for example: `*.gd,*.tscn`.
 
 ## Compatibility
 
-| Godot | Version  |
-| ----- | -------- |
-| 4.6   | >= 1.0.0 |
-| 4.5   | >= 1.0.0 |
-| 4.4   | >= 1.0.0 |
-| 4.3   | >= 1.0.0 |
-| 4.2   | >= 1.0.0 |
+| Godot | Version        |
+| ----- | -------------- |
+| 4.6   | >= 1.0.0       |
+| 4.5   | 1.0.0  - 1.1.1 |
+| 4.4   | 1.0.0  - 1.1.1 |
+| 4.3   | 1.0.0  - 1.1.1 |
+| 4.2   | 1.0.0  - 1.1.1 |
 
 ## Screenshot
 
@@ -33,7 +33,9 @@ You can split multiple patterns with commas, for example: `*.gd,*.tscn`.
 
 ### 1.2.0
 
+- Require Godot 4.6
 - Upgrade scenes to Godot 4.6
+- Improve ProjectSettings changed handling
 
 ### 1.1.1
 

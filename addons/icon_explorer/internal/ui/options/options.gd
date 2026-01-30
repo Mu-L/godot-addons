@@ -30,7 +30,10 @@ func _ready() -> void:
     self._show_main_screen.toggled.connect(self._on_show_main_screen_changed)
 
     if Engine.is_editor_hint():
-        ProjectSettings.settings_changed.connect(self.update)
+        ProjectSettings.settings_changed.connect(func() -> void:
+            if ProjectSettings.check_changed_settings_in_group("plugins/icon_explorer"):
+                self.update()
+        )
     self.update()
 
 func update() -> void:

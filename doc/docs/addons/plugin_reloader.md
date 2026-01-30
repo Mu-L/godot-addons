@@ -10,13 +10,13 @@ Enable or disable plugins from within the editor main screen.
 
 ## Compatibility
 
-| Godot | Version  |
-| ----- | -------- |
-| 4.6   | >= 1.0.0 |
-| 4.5   | >= 1.0.0 |
-| 4.4   | >= 1.0.0 |
-| 4.3   | >= 1.0.0 |
-| 4.2   | >= 1.0.0 |
+| Godot | Version       |
+| ----- | ------------- |
+| 4.6   | >= 1.0.0      |
+| 4.5   | 1.0.0 - 1.2.2 |
+| 4.4   | 1.0.0 - 1.2.2 |
+| 4.3   | 1.0.0 - 1.2.2 |
+| 4.2   | 1.0.0 - 1.2.2 |
 
 ## Screenshot
 
@@ -26,7 +26,9 @@ Enable or disable plugins from within the editor main screen.
 
 ### 1.3.0
 
+- Require Godot 4.6
 - Upgrade scenes to Godot 4.6
+- Improve ProjectSettings changed handling
 
 ### 1.2.2
 

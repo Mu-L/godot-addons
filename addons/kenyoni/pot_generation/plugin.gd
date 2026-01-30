@@ -4,21 +4,23 @@ extends EditorPlugin
 const MenuScene := preload("res://addons/kenyoni/pot_generation/menu.tscn")
 const Utils := preload("res://addons/kenyoni/pot_generation/utils.gd")
 
+const CFG_KEY_PATHS: String = "plugins/kenyoni/pot_generation/paths"
+
 var _menu: Control
 
 func _get_plugin_name() -> String:
     return "POT Generation"
 
 func _enable_plugin() -> void:
-    if ProjectSettings.has_setting("plugins/kenyoni/pot_generation/paths"):
-        ProjectSettings.set_as_internal("plugins/kenyoni/pot_generation/paths", true)
+    if ProjectSettings.has_setting(CFG_KEY_PATHS):
+        ProjectSettings.set_as_internal(CFG_KEY_PATHS, true)
         return
     var paths: PackedStringArray = ProjectSettings.get_setting("internationalization/locale/translations_pot_files", PackedStringArray())
     var tr_paths: Array[PackedStringArray] = []
     for path: String in paths:
         tr_paths.push_back([path, ""])
-    ProjectSettings.set_setting("plugins/kenyoni/pot_generation/paths", tr_paths)
-    ProjectSettings.set_as_internal("plugins/kenyoni/pot_generation/paths", true)
+    ProjectSettings.set_setting(CFG_KEY_PATHS, tr_paths)
+    ProjectSettings.set_as_internal(CFG_KEY_PATHS, true)
 
 func _enter_tree() -> void:
     Utils._init()

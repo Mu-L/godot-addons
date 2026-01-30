@@ -1,6 +1,7 @@
 @tool
 extends VBoxContainer
 
+const Plugin := preload("res://addons/kenyoni/pot_generation/plugin.gd")
 const PotTree := preload("res://addons/kenyoni/pot_generation/tree.gd")
 const Utils := preload("res://addons/kenyoni/pot_generation/utils.gd")
 
@@ -24,7 +25,7 @@ func _ready() -> void:
     self._file_dialog.filters = ["*.gd", "*.tscn", "*.scn", "*.tres", "*.res"]
 
     var paths: Array[PackedStringArray] = []
-    paths.assign(ProjectSettings.get_setting("plugins/kenyoni/pot_generation/paths", []))
+    paths.assign(ProjectSettings.get_setting(Plugin.CFG_KEY_PATHS, []))
     for path: PackedStringArray in paths:
         self._tree.add_gen_item(path[0], path[1])
 
@@ -39,7 +40,7 @@ func _ready() -> void:
     ProjectSettings.settings_changed.connect(self._on_settings_changed)
 
 func _gen_filtered_files() -> PackedStringArray:
-    var paths: Array[PackedStringArray] = ProjectSettings.get_setting("plugins/kenyoni/pot_generation/paths", [])
+    var paths: Array[PackedStringArray] = ProjectSettings.get_setting(Plugin.CFG_KEY_PATHS, [])
     var files: PackedStringArray = []
     for path: PackedStringArray in paths:
         var base_path: String = path[0]
@@ -69,11 +70,13 @@ func _on_show_filtered_files_toggled(toggled: bool) -> void:
     self._tree.show_filtered_files = toggled
 
 func _on_paths_changed(paths: Array[PackedStringArray]) -> void:
-    ProjectSettings.set_setting("plugins/kenyoni/pot_generation/paths", paths)
+    ProjectSettings.set_setting(Plugin.CFG_KEY_PATHS, paths)
     var err: Error = ProjectSettings.save()
     if err != Error.OK:
         push_error("[POT Generation] Failed to save project settings: " + error_string(err))
     self._gen_filtered_files()
 
 func _on_settings_changed() -> void:
+    if !ProjectSettings.check_changed_settings_in_group("internationalization/locale/translation_add_builtin_strings_to_pot"):
+        return
     self._add_built_in_strings.set_pressed_no_signal(ProjectSettings.get_setting("internationalization/locale/translation_add_builtin_strings_to_pot", false))

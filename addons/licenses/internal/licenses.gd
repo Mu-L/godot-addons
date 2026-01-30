@@ -139,6 +139,9 @@ func _on_cfg_file_changed(new_path: String) -> void:
     self._update_set_license_filepath_button()
 
 func _on_project_settings_changed() -> void:
+    # TODO: remove check at some point in the future when Godot 4.6 is the minimum required version
+    if ProjectSettings.has_method("check_changed_settings_in_group") && !ProjectSettings.call("check_changed_settings_in_group", Licenses.CFG_KEY_INDENTATION):
+        return
     var cur_indentation: String = _get_license_indentation()
     if self._current_indentation != cur_indentation:
         self._current_indentation = cur_indentation

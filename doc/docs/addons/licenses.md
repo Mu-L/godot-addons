@@ -161,6 +161,7 @@ License class.
 
 - Upgrade scenes to Godot 4.6
 - Use `ResourceUID.ensure_path` for path comparisons
+- Improve ProjectSettings changed handling
 
 ### 1.10.0
 

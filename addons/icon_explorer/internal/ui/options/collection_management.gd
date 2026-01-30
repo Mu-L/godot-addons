@@ -67,11 +67,14 @@ func _ready() -> void:
     self._check_update_button.pressed.connect(self._check_for_updates)
 
     if Engine.is_editor_hint():
-        ProjectSettings.settings_changed.connect(self.update)
+        ProjectSettings.settings_changed.connect(func() -> void:
+            if ProjectSettings.check_changed_settings_in_group("plugins/icon_explorer"):
+                self.update()
+        )
     self.update()
 
 func update() -> void:
-    if !self.is_node_ready() || self.db == null:
+    if ! self.is_node_ready() || self.db == null:
         return
     self._tree.clear()
     self._tree.create_item()
