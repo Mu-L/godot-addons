@@ -8,6 +8,10 @@ const MainScreen := preload("res://addons/icon_explorer/internal/ui/main_screen.
 const MainScreenScene := preload("res://addons/icon_explorer/internal/ui/main_screen.tscn")
 const IconDatabase := preload("res://addons/icon_explorer/internal/scripts/database.gd")
 
+const CFG_KEY_LOAD_ON_STARTUP: String = "plugins/icon_explorer/load_on_startup"
+const CFG_KEY_SHOW_MAIN_SCREEN: String = "plugins/icon_explorer/show_main_screen"
+const CFG_KEY_PREVIEW_SIZE_EXP: String = "plugins/icon_explorer/preview_size_exp"
+
 var _explorer_dialog: ExplorerDialog
 var _main_screen: MainScreen = null
 
@@ -21,11 +25,22 @@ func _get_plugin_icon() -> Texture2D:
     return preload("res://addons/icon_explorer/icon.svg")
 
 func _enter_tree() -> void:
-    set_project_setting("plugins/icon_explorer/load_on_startup", false, TYPE_BOOL, PROPERTY_HINT_NONE)
-    set_project_setting("plugins/icon_explorer/show_main_screen", true, TYPE_BOOL, PROPERTY_HINT_NONE)
-    ProjectSettings.set_restart_if_changed("plugins/icon_explorer/show_main_screen", true)
-    set_project_setting("plugins/icon_explorer/preview_size_exp", 6, TYPE_INT, PROPERTY_HINT_RANGE, "4,8,1")
-    ProjectSettings.set_as_internal("plugins/icon_explorer/preview_size_exp", true)
+    set_editor_setting(CFG_KEY_LOAD_ON_STARTUP, false, TYPE_BOOL, PROPERTY_HINT_NONE)
+    set_editor_setting(CFG_KEY_SHOW_MAIN_SCREEN, true, TYPE_BOOL, PROPERTY_HINT_NONE)
+    # this could be actually window layout state, but this would be complicated to save back and forth
+    set_editor_setting(CFG_KEY_PREVIEW_SIZE_EXP, 6, TYPE_INT, PROPERTY_HINT_RANGE, "4,8,1")
+
+    # TODO: remove later
+    var settings: EditorSettings = EditorInterface.get_editor_settings()
+    if ProjectSettings.has_setting("plugins/icon_explorer/preview_size_exp"):
+        settings.set_setting(CFG_KEY_PREVIEW_SIZE_EXP, ProjectSettings.get_setting("plugins/icon_explorer/preview_size_exp", 6))
+        ProjectSettings.set_setting("plugins/icon_explorer/preview_size_exp", null)
+    if ProjectSettings.has_setting("plugins/icon_explorer/load_on_startup"):
+        settings.set_setting(CFG_KEY_LOAD_ON_STARTUP, ProjectSettings.get_setting("plugins/icon_explorer/load_on_startup", false))
+        ProjectSettings.set_setting("plugins/icon_explorer/load_on_startup", null)
+    if ProjectSettings.has_setting("plugins/icon_explorer/show_main_screen"):
+        settings.set_setting(CFG_KEY_SHOW_MAIN_SCREEN, ProjectSettings.get_setting("plugins/icon_explorer/show_main_screen", true))
+        ProjectSettings.set_setting("plugins/icon_explorer/show_main_screen", null)
 
     self._explorer_dialog = ExplorerDialogScene.instantiate()
     EditorInterface.get_base_control().add_child(self._explorer_dialog)
@@ -41,7 +56,7 @@ func _enter_tree() -> void:
         EditorInterface.get_editor_main_screen().add_child(self._main_screen)
         self._main_screen.hide()
 
-    if ProjectSettings.get_setting("plugins/icon_explorer/load_on_startup", false):
+    if settings.get_setting(CFG_KEY_LOAD_ON_STARTUP):
         self._db.load()
 
 func _exit_tree() -> void:
@@ -52,7 +67,8 @@ func _exit_tree() -> void:
     self._explorer_dialog.free()
 
 func _has_main_screen() -> bool:
-    return ProjectSettings.get_setting("plugins/icon_explorer/show_main_screen", true)
+    var settings: EditorSettings = EditorInterface.get_editor_settings()
+    return !settings.has_setting(CFG_KEY_SHOW_MAIN_SCREEN) || settings.get_setting(CFG_KEY_SHOW_MAIN_SCREEN)
 
 func _make_visible(visible: bool) -> void:
     if !self._db_loaded:
@@ -82,11 +98,12 @@ func _on_collection_changed(id: int, status: Error, is_installation: bool):
             msg += "removing failed."
     print(msg)
 
-static func set_project_setting(key: String, initial_value: Variant, type: Variant.Type, type_hint: PropertyHint, hint_string: String = "") -> void:
-    if !ProjectSettings.has_setting(key):
-        ProjectSettings.set_setting(key, initial_value)
-    ProjectSettings.set_initial_value(key, initial_value)
-    ProjectSettings.add_property_info({
+static func set_editor_setting(key: String, initial_value: Variant, type: Variant.Type, type_hint: PropertyHint, hint_string: String = "") -> void:
+    var settings: EditorSettings = EditorInterface.get_editor_settings()
+    if !settings.has_setting(key):
+        settings.set_setting(key, initial_value)
+    settings.set_initial_value(key, initial_value, false)
+    settings.add_property_info({
         "name": key,
         "type": type,
         "hint": type_hint,

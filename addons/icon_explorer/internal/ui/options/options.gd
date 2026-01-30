@@ -1,6 +1,7 @@
 @tool
 extends PanelContainer
 
+const Plugin := preload("res://addons/icon_explorer/plugin.gd")
 const IconDatabase := preload("res://addons/icon_explorer/internal/scripts/database.gd")
 const Collection := preload("res://addons/icon_explorer/internal/scripts/collection.gd")
 const CollectionManagement := preload("res://addons/icon_explorer/internal/ui/options/collection_management.gd")
@@ -30,19 +31,19 @@ func _ready() -> void:
     self._show_main_screen.toggled.connect(self._on_show_main_screen_changed)
 
     if Engine.is_editor_hint():
-        ProjectSettings.settings_changed.connect(func() -> void:
-            if ProjectSettings.check_changed_settings_in_group("plugins/icon_explorer"):
+        EditorInterface.get_editor_settings().settings_changed.connect(func() -> void:
+            if EditorInterface.get_editor_settings().check_changed_settings_in_group("plugins/icon_explorer"):
                 self.update()
         )
     self.update()
 
 func update() -> void:
-    self._load_on_startup.set_pressed_no_signal(ProjectSettings.get_setting("plugins/icon_explorer/load_on_startup", false) as bool)
-    self._show_main_screen.set_pressed_no_signal(ProjectSettings.get_setting("plugins/icon_explorer/show_main_screen", true) as bool)
+    self._load_on_startup.set_pressed_no_signal(EditorInterface.get_editor_settings().get_setting(Plugin.CFG_KEY_LOAD_ON_STARTUP) as bool)
+    self._show_main_screen.set_pressed_no_signal(EditorInterface.get_editor_settings().get_setting(Plugin.CFG_KEY_SHOW_MAIN_SCREEN) as bool)
 
 func _on_startup_changed(toggled: bool) -> void:
-    ProjectSettings.set_setting("plugins/icon_explorer/load_on_startup", toggled)
+    EditorInterface.get_editor_settings().set_setting(Plugin.CFG_KEY_LOAD_ON_STARTUP, toggled)
 
 func _on_show_main_screen_changed(toggled: bool) -> void:
-    ProjectSettings.set_setting("plugins/icon_explorer/show_main_screen", toggled)
+    EditorInterface.get_editor_settings().set_setting(Plugin.CFG_KEY_SHOW_MAIN_SCREEN, toggled)
     self._reload_current_project.visible = true

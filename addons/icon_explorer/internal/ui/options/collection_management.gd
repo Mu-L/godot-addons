@@ -67,8 +67,8 @@ func _ready() -> void:
     self._check_update_button.pressed.connect(self._check_for_updates)
 
     if Engine.is_editor_hint():
-        ProjectSettings.settings_changed.connect(func() -> void:
-            if ProjectSettings.check_changed_settings_in_group("plugins/icon_explorer"):
+        EditorInterface.get_editor_settings().settings_changed.connect(func() -> void:
+            if EditorInterface.get_editor_settings().check_changed_settings_in_group("plugins/icon_explorer"):
                 self.update()
         )
     self.update()

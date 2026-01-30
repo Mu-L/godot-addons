@@ -6,7 +6,7 @@ const FilterOptions := preload("res://addons/icon_explorer/internal/ui/explorer/
 const Icon := preload("res://addons/icon_explorer/internal/scripts/icon.gd")
 const IconDatabase := preload("res://addons/icon_explorer/internal/scripts/database.gd")
 const DetailPanel := preload("res://addons/icon_explorer/internal/ui/detail_panel/detail_panel.gd")
-
+const Plugin := preload("res://addons/icon_explorer/plugin.gd")
 const Options := preload("res://addons/icon_explorer/internal/ui/options/options.gd")
 
 @export var _filter_icon: TextureRect
@@ -50,12 +50,12 @@ func _ready() -> void:
     self._filter.text_changed.connect(self._on_filter_changed)
     self._filter.text_submitted.connect(self._on_filter_submitted)
     self._preview_color.popup_closed.connect(self._update_preview_color)
-    self._update_preview_size(ProjectSettings.get_setting("plugins/icon_explorer/preview_size_exp") as float)
+    self._update_preview_size(EditorInterface.get_editor_settings().get_setting(Plugin.CFG_KEY_PREVIEW_SIZE_EXP) as float)
     if Engine.is_editor_hint():
-        ProjectSettings.settings_changed.connect(
+        EditorInterface.get_editor_settings().settings_changed.connect(
         func() -> void:
-            if ProjectSettings.check_changed_settings_in_group("plugins/icon_explorer/preview_size_exp"):
-                self._update_preview_size(ProjectSettings.get_setting("plugins/icon_explorer/preview_size_exp") as float)
+            if EditorInterface.get_editor_settings().check_changed_settings_in_group(Plugin.CFG_KEY_PREVIEW_SIZE_EXP):
+                self._update_preview_size(EditorInterface.get_editor_settings().get_setting(Plugin.CFG_KEY_PREVIEW_SIZE_EXP) as float)
     )
     self._preview_size.value_changed.connect(self._on_preview_size_changed)
     self._detail_panel.preview_color = self._preview_color.color
@@ -131,7 +131,7 @@ func _update_preview_color() -> void:
 
 func _on_preview_size_changed(expo: float) -> void:
     self._update_preview_size(expo)
-    ProjectSettings.set_setting("plugins/icon_explorer/preview_size_exp", expo)
+    EditorInterface.get_editor_settings().set_setting(Plugin.CFG_KEY_PREVIEW_SIZE_EXP, expo)
 
 func _update_preview_size(expo: float) -> void:
     var icon_size: int = int(pow(2.0, expo))
