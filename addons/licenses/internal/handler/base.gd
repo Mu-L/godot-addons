@@ -19,7 +19,6 @@ func _init(tree_: ComponentDetailTree, item_: TreeItem, value_: Variant, propert
 static func can_handle(property: Dictionary) -> bool:
     return false
 
-# return true if edited
 func button_clicked(column: int, id: int, mouse_button_idx: int) -> void:
     pass
 
