@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://u78fl5760vh3"]
+[gd_scene format=3 uid="uid://u78fl5760vh3"]
 
 [ext_resource type="Script" uid="uid://w0qw7vc2yr4y" path="res://examples/qr_code/main.gd" id="1_55tdt"]
 [ext_resource type="Script" uid="uid://dynulhnyq5hpq" path="res://addons/qr_code/qr_code_rect.gd" id="1_t1m1p"]
 
-[node name="HBoxContainer" type="HBoxContainer" node_paths=PackedStringArray("_input_data_text", "_encoding", "_error_correction", "_use_eci", "_eci_value", "_version", "_mask_pattern", "_module_px_size", "_qr_rect")]
+[node name="HBoxContainer" type="HBoxContainer" unique_id=1018684991 node_paths=PackedStringArray("_input_data_text", "_encoding", "_error_correction", "_use_eci", "_eci_value", "_version", "_mask_pattern", "_module_px_size", "_qr_rect")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,37 +20,37 @@ _mask_pattern = NodePath("MarginContainer2/VBoxContainer/options/MaskPattern")
 _module_px_size = NodePath("MarginContainer2/VBoxContainer/options/ModulePxSize")
 _qr_rect = NodePath("MarginContainer/QRCodeRect")
 
-[node name="MarginContainer2" type="MarginContainer" parent="."]
+[node name="MarginContainer2" type="MarginContainer" parent="." unique_id=292203905]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2" unique_id=265323509]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InputDataText" type="TextEdit" parent="MarginContainer2/VBoxContainer"]
+[node name="InputDataText" type="TextEdit" parent="MarginContainer2/VBoxContainer" unique_id=523669918]
 layout_mode = 2
 size_flags_vertical = 3
 placeholder_text = "Data"
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer2/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer2/VBoxContainer" unique_id=1151907566]
 layout_mode = 2
 
-[node name="options" type="GridContainer" parent="MarginContainer2/VBoxContainer"]
+[node name="options" type="GridContainer" parent="MarginContainer2/VBoxContainer" unique_id=116582115]
 layout_mode = 2
 columns = 3
 
-[node name="EncodingLabel" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="EncodingLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=1072415235]
 layout_mode = 2
 text = "Encoding"
 
-[node name="Control2" type="Control" parent="MarginContainer2/VBoxContainer/options"]
+[node name="Control2" type="Control" parent="MarginContainer2/VBoxContainer/options" unique_id=1551717407]
 layout_mode = 2
 
-[node name="Encoding" type="OptionButton" parent="MarginContainer2/VBoxContainer/options"]
+[node name="Encoding" type="OptionButton" parent="MarginContainer2/VBoxContainer/options" unique_id=553255802]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
@@ -65,14 +65,14 @@ popup/item_2/id = 4
 popup/item_3/text = "KANJI"
 popup/item_3/id = 8
 
-[node name="ErrorCorrectionLabel" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="ErrorCorrectionLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=71869209]
 layout_mode = 2
 text = "Error Correction"
 
-[node name="Control" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="Control" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=1471291395]
 layout_mode = 2
 
-[node name="ErrorCorrection" type="OptionButton" parent="MarginContainer2/VBoxContainer/options"]
+[node name="ErrorCorrection" type="OptionButton" parent="MarginContainer2/VBoxContainer/options" unique_id=1973219636]
 layout_mode = 2
 alignment = 1
 selected = 0
@@ -86,17 +86,17 @@ popup/item_2/id = 3
 popup/item_3/text = "High"
 popup/item_3/id = 2
 
-[node name="ECIModeLabel" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="ECIModeLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=1122147465]
 layout_mode = 2
 tooltip_text = "Using BYTE encoding will force an ECI value. Because only for the specific ECI values is text to byte conversion available.
 You can always pass an byte array as data in your scripts."
 mouse_filter = 0
 text = "ECI Value *"
 
-[node name="UseECI" type="CheckBox" parent="MarginContainer2/VBoxContainer/options"]
+[node name="UseECI" type="CheckBox" parent="MarginContainer2/VBoxContainer/options" unique_id=1456837136]
 layout_mode = 2
 
-[node name="ECIValue" type="OptionButton" parent="MarginContainer2/VBoxContainer/options"]
+[node name="ECIValue" type="OptionButton" parent="MarginContainer2/VBoxContainer/options" unique_id=2025616523]
 layout_mode = 2
 disabled = true
 alignment = 1
@@ -113,93 +113,93 @@ popup/item_3/id = 26
 popup/item_4/text = "ASCII"
 popup/item_4/id = 27
 
-[node name="VersionLabel" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="VersionLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=535169002]
 layout_mode = 2
 text = "Version"
 
-[node name="AutoVersion" type="CheckBox" parent="MarginContainer2/VBoxContainer/options"]
+[node name="AutoVersion" type="CheckBox" parent="MarginContainer2/VBoxContainer/options" unique_id=659391632]
 layout_mode = 2
 button_pressed = true
 
-[node name="Version" type="SpinBox" parent="MarginContainer2/VBoxContainer/options"]
+[node name="Version" type="SpinBox" parent="MarginContainer2/VBoxContainer/options" unique_id=2003917429]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 40.0
 alignment = 1
 editable = false
 
-[node name="MaskPatternLabel" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="MaskPatternLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=1756127265]
 layout_mode = 2
 tooltip_text = "-1 is automatically using the best pattern."
 mouse_filter = 1
 text = "Mask Pattern"
 
-[node name="AutoMaskPattern" type="CheckBox" parent="MarginContainer2/VBoxContainer/options"]
+[node name="AutoMaskPattern" type="CheckBox" parent="MarginContainer2/VBoxContainer/options" unique_id=1745091010]
 layout_mode = 2
 button_pressed = true
 
-[node name="MaskPattern" type="SpinBox" parent="MarginContainer2/VBoxContainer/options"]
+[node name="MaskPattern" type="SpinBox" parent="MarginContainer2/VBoxContainer/options" unique_id=1711707903]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 7.0
 alignment = 1
 editable = false
 
-[node name="LightModulesLabel" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="LightModulesLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=197084317]
 layout_mode = 2
 text = "Light Modules"
 
-[node name="Control3" type="Control" parent="MarginContainer2/VBoxContainer/options"]
+[node name="Control3" type="Control" parent="MarginContainer2/VBoxContainer/options" unique_id=1080115320]
 layout_mode = 2
 
-[node name="LightModuleColor" type="ColorPickerButton" parent="MarginContainer2/VBoxContainer/options"]
+[node name="LightModuleColor" type="ColorPickerButton" parent="MarginContainer2/VBoxContainer/options" unique_id=730030500]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(1, 1, 1, 1)
 
-[node name="DarkModulesLabel" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="DarkModulesLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=999712502]
 layout_mode = 2
 text = "Dark Modules"
 
-[node name="Control5" type="Control" parent="MarginContainer2/VBoxContainer/options"]
+[node name="Control5" type="Control" parent="MarginContainer2/VBoxContainer/options" unique_id=1090373481]
 layout_mode = 2
 
-[node name="DarkModuleColor" type="ColorPickerButton" parent="MarginContainer2/VBoxContainer/options"]
+[node name="DarkModuleColor" type="ColorPickerButton" parent="MarginContainer2/VBoxContainer/options" unique_id=443655059]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ModulePxSizeLabel" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="ModulePxSizeLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=949913811]
 layout_mode = 2
 text = "Module Px Size"
 
-[node name="AutoModulePxSize" type="CheckBox" parent="MarginContainer2/VBoxContainer/options"]
+[node name="AutoModulePxSize" type="CheckBox" parent="MarginContainer2/VBoxContainer/options" unique_id=1389425839]
 layout_mode = 2
 button_pressed = true
 
-[node name="ModulePxSize" type="SpinBox" parent="MarginContainer2/VBoxContainer/options"]
+[node name="ModulePxSize" type="SpinBox" parent="MarginContainer2/VBoxContainer/options" unique_id=1674323374]
 layout_mode = 2
 size_flags_horizontal = 3
 allow_greater = true
 alignment = 1
 editable = false
 
-[node name="QuietZoneSizeLabel" type="Label" parent="MarginContainer2/VBoxContainer/options"]
+[node name="QuietZoneSizeLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=1726269456]
 layout_mode = 2
 text = "Quiet Zone Size"
 
-[node name="Control6" type="Control" parent="MarginContainer2/VBoxContainer/options"]
+[node name="Control6" type="Control" parent="MarginContainer2/VBoxContainer/options" unique_id=834507016]
 layout_mode = 2
 
-[node name="QuietZoneSize" type="SpinBox" parent="MarginContainer2/VBoxContainer/options"]
+[node name="QuietZoneSize" type="SpinBox" parent="MarginContainer2/VBoxContainer/options" unique_id=48753325]
 layout_mode = 2
 size_flags_horizontal = 3
 value = 4.0
 allow_greater = true
 alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=33990807]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
@@ -208,7 +208,7 @@ theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 32
 
-[node name="QRCodeRect" type="TextureRect" parent="MarginContainer"]
+[node name="QRCodeRect" type="TextureRect" parent="MarginContainer" unique_id=1989522224]
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5

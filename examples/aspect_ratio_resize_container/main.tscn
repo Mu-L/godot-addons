@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b88gr0ate1nhy"]
+[gd_scene format=3 uid="uid://b88gr0ate1nhy"]
 
 [ext_resource type="Script" uid="uid://cohqhnwlnu2f3" path="res://examples/aspect_ratio_resize_container/main.gd" id="1_xp7e6"]
 [ext_resource type="Texture2D" uid="uid://bo4ok4qv5mbsx" path="res://examples/aspect_ratio_resize_container/icon.svg" id="2_utqnv"]
@@ -30,7 +30,7 @@ border_color = Color(1, 0, 1, 1)
 
 [sub_resource type="Theme" id="Theme_ecalg"]
 
-[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("aspect_ratio", "aspect_resize", "ar_height", "ar_width", "as_height", "as_width")]
+[node name="VBoxContainer" type="VBoxContainer" unique_id=1668163086 node_paths=PackedStringArray("aspect_ratio", "aspect_resize", "ar_height", "ar_width", "as_height", "as_width")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -44,14 +44,14 @@ ar_width = NodePath("main/VSplitContainer/HSplitContainer")
 as_height = NodePath("main/VSplitContainer2")
 as_width = NodePath("main/VSplitContainer2/HSplitContainer")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=357966293]
 layout_mode = 2
 
-[node name="VBoxContainer" type="GridContainer" parent="PanelContainer"]
+[node name="VBoxContainer" type="GridContainer" parent="PanelContainer" unique_id=1450312470]
 layout_mode = 2
 columns = 4
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer" unique_id=2124637353]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -59,14 +59,14 @@ text = "Ratio"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ratio" type="SpinBox" parent="PanelContainer/VBoxContainer"]
+[node name="ratio" type="SpinBox" parent="PanelContainer/VBoxContainer" unique_id=1236140386]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 10.0
 step = 0.0
 value = 1.0
 
-[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer" unique_id=46420783]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -74,7 +74,7 @@ text = "Stretch Mode"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="stretch_mode" type="OptionButton" parent="PanelContainer/VBoxContainer"]
+[node name="stretch_mode" type="OptionButton" parent="PanelContainer/VBoxContainer" unique_id=1712179985]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 2
@@ -88,7 +88,7 @@ popup/item_2/id = 2
 popup/item_3/text = "STRETCH_COVER"
 popup/item_3/id = 3
 
-[node name="Label3" type="Label" parent="PanelContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="PanelContainer/VBoxContainer" unique_id=549066273]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -96,7 +96,7 @@ text = "Hor. Alignment"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="hor_align" type="OptionButton" parent="PanelContainer/VBoxContainer"]
+[node name="hor_align" type="OptionButton" parent="PanelContainer/VBoxContainer" unique_id=108326521]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 1
@@ -108,7 +108,7 @@ popup/item_1/id = 1
 popup/item_2/text = "ALIGNMENT_END"
 popup/item_2/id = 2
 
-[node name="Label4" type="Label" parent="PanelContainer/VBoxContainer"]
+[node name="Label4" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1069931949]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -116,7 +116,7 @@ text = "Ver. Alignment"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ver_align" type="OptionButton" parent="PanelContainer/VBoxContainer"]
+[node name="ver_align" type="OptionButton" parent="PanelContainer/VBoxContainer" unique_id=2086153163]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 1
@@ -128,75 +128,75 @@ popup/item_1/id = 1
 popup/item_2/text = "ALIGNMENT_END"
 popup/item_2/id = 2
 
-[node name="HSeparator" type="HSeparator" parent="."]
+[node name="HSeparator" type="HSeparator" parent="." unique_id=1982932158]
 layout_mode = 2
 
-[node name="main" type="HBoxContainer" parent="."]
+[node name="main" type="HBoxContainer" parent="." unique_id=2098118263]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VSplitContainer" type="VSplitContainer" parent="main"]
+[node name="VSplitContainer" type="VSplitContainer" parent="main" unique_id=474655121]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/autohide = 0
 theme_override_icons/grabber = SubResource("GradientTexture2D_7q1v8")
 
-[node name="Container" type="Control" parent="main/VSplitContainer"]
+[node name="Container" type="Control" parent="main/VSplitContainer" unique_id=1261701007]
 layout_mode = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="main/VSplitContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="main/VSplitContainer" unique_id=974575440]
 layout_mode = 2
 theme_override_constants/autohide = 0
 theme_override_icons/grabber = SubResource("GradientTexture2D_yrl0f")
 
-[node name="Container2" type="Control" parent="main/VSplitContainer/HSplitContainer"]
+[node name="Container2" type="Control" parent="main/VSplitContainer/HSplitContainer" unique_id=275515893]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="main/VSplitContainer/HSplitContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="main/VSplitContainer/HSplitContainer" unique_id=43490175]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6yd")
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="main/VSplitContainer/HSplitContainer/PanelContainer"]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="main/VSplitContainer/HSplitContainer/PanelContainer" unique_id=1291433522]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = SubResource("Theme_ecalg")
 
-[node name="TextureRect" type="TextureRect" parent="main/VSplitContainer/HSplitContainer/PanelContainer/AspectRatioContainer"]
+[node name="TextureRect" type="TextureRect" parent="main/VSplitContainer/HSplitContainer/PanelContainer/AspectRatioContainer" unique_id=662037056]
 layout_mode = 2
 texture = ExtResource("2_utqnv")
 
-[node name="VSeparator" type="VSeparator" parent="main"]
+[node name="VSeparator" type="VSeparator" parent="main" unique_id=1156363178]
 layout_mode = 2
 
-[node name="VSplitContainer2" type="VSplitContainer" parent="main"]
+[node name="VSplitContainer2" type="VSplitContainer" parent="main" unique_id=1305837714]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/autohide = 0
 theme_override_icons/grabber = SubResource("GradientTexture2D_7q1v8")
 
-[node name="Container" type="Control" parent="main/VSplitContainer2"]
+[node name="Container" type="Control" parent="main/VSplitContainer2" unique_id=865106563]
 layout_mode = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="main/VSplitContainer2"]
+[node name="HSplitContainer" type="HSplitContainer" parent="main/VSplitContainer2" unique_id=1963138866]
 layout_mode = 2
 theme_override_constants/autohide = 0
 theme_override_icons/grabber = SubResource("GradientTexture2D_yrl0f")
 
-[node name="Container2" type="Control" parent="main/VSplitContainer2/HSplitContainer"]
+[node name="Container2" type="Control" parent="main/VSplitContainer2/HSplitContainer" unique_id=1116620253]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="main/VSplitContainer2/HSplitContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="main/VSplitContainer2/HSplitContainer" unique_id=712180348]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6yd")
 
-[node name="AspectRatioResizeContainer" type="AspectRatioContainer" parent="main/VSplitContainer2/HSplitContainer/PanelContainer"]
+[node name="AspectRatioResizeContainer" type="AspectRatioContainer" parent="main/VSplitContainer2/HSplitContainer/PanelContainer" unique_id=739068741]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 script = ExtResource("3_mf1ua")
 
-[node name="TextureRect2" type="TextureRect" parent="main/VSplitContainer2/HSplitContainer/PanelContainer/AspectRatioResizeContainer"]
+[node name="TextureRect2" type="TextureRect" parent="main/VSplitContainer2/HSplitContainer/PanelContainer/AspectRatioResizeContainer" unique_id=1652679970]
 layout_mode = 2
 texture = ExtResource("2_utqnv")
 

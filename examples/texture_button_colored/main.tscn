@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://nrybkmxo33jk"]
+[gd_scene format=3 uid="uid://nrybkmxo33jk"]
 
 [ext_resource type="Texture2D" uid="uid://b88tq0lbpd3m4" path="res://examples/texture_button_colored/icon.svg" id="1_a3thv"]
 [ext_resource type="Script" uid="uid://oaogoeub28xf" path="res://addons/texture_button_colored/texture_button_colored.gd" id="1_q0uuq"]
 
-[node name="main" type="Control"]
+[node name="main" type="Control" unique_id=207863507]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1212390903]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,7 +19,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureButtonColored" type="TextureButton" parent="CenterContainer"]
+[node name="TextureButtonColored" type="TextureButton" parent="CenterContainer" unique_id=898164037]
 self_modulate = Color(0.960784, 0.411765, 0.54902, 1)
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
