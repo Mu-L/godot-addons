@@ -681,6 +681,9 @@ const _ALIGNMENT_PATTERN_POSITIONS: Array[Array] = [
 ## remainder bits after structured data bits
 const _REMAINDER_BITS: Array[int] = [0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0]
 
+const _DARK: int = 1
+const _LIGHT: int = 0
+
 static var _number_rx: RegEx = RegEx.create_from_string("[^\\d]*")
 static var _alphanumeric_rx: RegEx = RegEx.create_from_string("[^0-9A-Z $%*+\\-.\\/:]*")
 
@@ -754,6 +757,8 @@ func set_use_eci(new_use_eci: bool) -> void:
 func set_eci_value(new_eci_value: int) -> void:
     if new_eci_value == eci_value:
         return
+    if !ECI.values().has(new_eci_value):
+        return
     eci_value = new_eci_value
     self._clear_cache()
 
@@ -783,10 +788,18 @@ func get_module_count() -> int:
 func calc_min_version() -> int:
     var input_size: int = self._get_input_data_size()
     for idx: int in range(_DATA_CAPACITY.size()):
-        var cap: int = _DATA_CAPACITY[idx][self.error_correction][self.mode]
-        if self.eci_value != ECI.ISO_8859_1:
+        var cap: int = _DATA_CAPACITY[idx][ self.error_correction][ self.mode]
+        if self.use_eci:
             # subtract roughly eci header size
-            cap -= 4
+            match self.mode:
+                Mode.NUMERIC:
+                    cap -= 4
+                Mode.ALPHANUMERIC:
+                    cap -= 3
+                Mode.BYTE:
+                    cap -= 2
+                Mode.KANJI:
+                    cap -= 1
         if input_size <= cap:
             return idx + 1
     return -1
@@ -809,7 +822,7 @@ static func _mask_pattern_fns() -> Array[Callable]:
 
 # helper function check if a bit is set
 static func _get_state(value: int, idx: int) -> bool:
-    return (value & (1 << idx))
+    return value & (1 << idx) != 0
 
 func _get_data_codeword_count() -> int:
     return _ERROR_CORRECTION[self.version - 1][self.error_correction][0]
@@ -832,9 +845,9 @@ func _get_alignment_pattern_positions() -> Array[Vector2i]:
     for row: int in _ALIGNMENT_PATTERN_POSITIONS[self.version - 1]:
         for col: int in _ALIGNMENT_PATTERN_POSITIONS[self.version - 1]:
             # do not overlap finder positions
-            if row - 2 < 8 && col - 2 < 8 || \
-                row > module_count - 8 && col - 2 < 8 || \
-                row - 2 < 8 && col > module_count - 8:
+            if (row - 2 < 8 && col - 2 < 8) || \
+                (row - 2 < 8 && col + 2 > module_count - 8) || \
+                (row + 2 >= module_count - 8 && col - 2 < 8):
                 continue
             positions.append(Vector2i(row, col))
     return positions
@@ -915,9 +928,9 @@ func generate_image(module_px_size: int = 1, light_module_color: Color = Color.W
         for x: int in range(module_count):
             var color: Color = Color.PINK
             match qr_code[x + y * module_count]:
-                0:
+                _LIGHT:
                     color = light_module_color
-                1:
+                _DARK:
                     color = dark_module_color
             for offset_x: int in range(module_px_size):
                 for offset_y: int in range(module_px_size):
@@ -947,6 +960,7 @@ func put_kanji(data: String) -> void:
     if self.mode != Mode.KANJI || data != self._input_data:
         self._clear_cache()
     self.mode = Mode.KANJI
+    # clear invalid characters
     self._input_data = ShiftJIS.get_string_from_shift_jis_2004(ShiftJIS.to_shift_jis_2004_buffer(data))
 
 ## returns row by row
@@ -1153,37 +1167,37 @@ func _structure_data(data_stream: BitStream, err_correction: Array[PackedByteArr
 static func _place_finder(data: PackedByteArray, module_count: int, pos: Vector2i) -> void:
     for row: int in range(7):
         for col: int in range(7):
-            data[(pos.x + row) + (pos.y + col) * module_count] = 1
+            data[(pos.x + row) + (pos.y + col) * module_count] = _DARK
     for idx: int in range(5):
-        data[(pos.x + 1 + idx) + (pos.y + 1) * module_count] = 0
-        data[(pos.x + 1 + idx) + (pos.y + 5) * module_count] = 0
+        data[(pos.x + 1 + idx) + (pos.y + 1) * module_count] = _LIGHT
+        data[(pos.x + 1 + idx) + (pos.y + 5) * module_count] = _LIGHT
     for idx: int in range(3):
-        data[(pos.x + 1) + (pos.y + 2 + idx) * module_count] = 0
-        data[(pos.x + 5) + (pos.y + 2 + idx) * module_count] = 0
+        data[(pos.x + 1) + (pos.y + 2 + idx) * module_count] = _LIGHT
+        data[(pos.x + 5) + (pos.y + 2 + idx) * module_count] = _LIGHT
 
 # pos is center
 # 5 x 5 size
 static func _place_align_pattern(data: PackedByteArray, module_count: int, pos: Vector2i) -> void:
     for row: int in range(5):
         for col: int in range(5):
-            data[(pos.x - 2 + row) + (pos.y - 2 + col) * module_count] = 1
+            data[(pos.x - 2 + row) + (pos.y - 2 + col) * module_count] = _DARK
     for idx: int in range(3):
-        data[(pos.x - 1 + idx) + (pos.y - 1) * module_count] = 0
-        data[(pos.x - 1 + idx) + (pos.y + 1) * module_count] = 0
-    data[(pos.x - 1) + (pos.y) * module_count] = 0
-    data[(pos.x + 1) + (pos.y) * module_count] = 0
+        data[(pos.x - 1 + idx) + (pos.y - 1) * module_count] = _LIGHT
+        data[(pos.x - 1 + idx) + (pos.y + 1) * module_count] = _LIGHT
+    data[(pos.x - 1) + (pos.y) * module_count] = _LIGHT
+    data[(pos.x + 1) + (pos.y) * module_count] = _LIGHT
 
 static func _place_separators(data: PackedByteArray, module_count: int) -> void:
     for idx: int in range(8):
         # upper left
-        data[idx + 7 * module_count] = 0
-        data[7 + idx * module_count] = 0
+        data[idx + 7 * module_count] = _LIGHT
+        data[7 + idx * module_count] = _LIGHT
         # lower left
-        data[idx + (module_count - 8) * module_count] = 0
-        data[(module_count - 8) + idx * module_count] = 0
+        data[idx + (module_count - 8) * module_count] = _LIGHT
+        data[(module_count - 8) + idx * module_count] = _LIGHT
         # upper right
-        data[(module_count - idx - 1) + 7 * module_count] = 0
-        data[7 + (module_count - idx - 1) * module_count] = 0
+        data[(module_count - idx - 1) + 7 * module_count] = _LIGHT
+        data[7 + (module_count - idx - 1) * module_count] = _LIGHT
 
 static func _place_timing_patterns(data: PackedByteArray, module_count: int) -> void:
     for idx: int in range(module_count - 6 * 2):
@@ -1191,24 +1205,32 @@ static func _place_timing_patterns(data: PackedByteArray, module_count: int) -> 
         data[6 + (6 + idx) * module_count] = (idx + 1) % 2
 
 static func _is_data_module(module_count: int, alignment_pattern_pos: Array[Vector2i], pos: Vector2i) -> bool:
-    # finder with separation and format information area: upper left finder, upper right finder, lower left finder
-    # dark module is also included
-    if (pos.x <= 8 && pos.y <= 8) || (pos.x >= (module_count - 8) && pos.y <= 8) || (pos.x <= 8 && pos.y >= (module_count - 8)):
+    # finder patterns with separators and format information area
+    if (pos.x <= 8 && pos.y <= 8) || \
+       (pos.x >= module_count - 8 && pos.y <= 8) || \
+       (pos.x <= 8 && pos.y >= module_count - 8):
         return false
-    # timing pattern
-    if pos.x == 6 || pos.y == 6:
+    
+    # timing patterns (run through middle, already excluded in finder areas)
+    if (pos.x == 6 && pos.y >= 8 && pos.y < module_count - 8) || \
+       (pos.y == 6 && pos.x >= 8 && pos.x < module_count - 8):
         return false
-    # version information area
-    # for version >= 7, upper and lower
-    # this check, will also success if it is in a finder area
-    if module_count >= 45 && ((pos.x >= module_count - 11 && pos.y <= 5) || (pos.x <= 5 && pos.y >= module_count - 11)):
-        return false
-
-    # check if in alignment pattern
-    for align_pos: Vector2i in alignment_pattern_pos:
-        if pos.x >= align_pos.x - 2 && pos.x <= align_pos.x + 2 && pos.y >= align_pos.y - 2 && pos.y <= align_pos.y + 2:
+    
+    # version information area (version >= 7 only)
+    if module_count >= 45:
+        # Bottom-left: 6 rows × 3 columns
+        if pos.x <= 5 && pos.y >= module_count - 11 && pos.y <= module_count - 9:
             return false
-
+        # Top-right: 3 rows × 6 columns  
+        if pos.y <= 5 && pos.x >= module_count - 11 && pos.x <= module_count - 9:
+            return false
+    
+    # alignment patterns
+    for align_pos: Vector2i in alignment_pattern_pos:
+        if pos.x >= align_pos.x - 2 && pos.x <= align_pos.x + 2 && \
+           pos.y >= align_pos.y - 2 && pos.y <= align_pos.y + 2:
+            return false
+    
     return true
 
 static func _place_data(data: PackedByteArray, module_count: int, alignment_pattern_pos: Array[Vector2i], structured_data: BitStream) -> void:
@@ -1283,34 +1305,34 @@ static func _calc_mask_rating(data: PackedByteArray, module_count: int) -> int:
     for y: int in range(module_count):
         for x: int in range(module_count - 6):
             var start_idx: int = x + y * module_count
-            if (!data[start_idx]
-                && data[start_idx + 1]
-                && !data[start_idx + 2]
-                && !data[start_idx + 3]
-                && !data[start_idx + 4]
-                && data[start_idx + 5]
-                && !data[start_idx + 6]):
-                    if x >= 4 && data[start_idx - 1] && data[start_idx - 2] && data[start_idx - 3] && data[start_idx - 4]:
+            if (data[start_idx]
+                && !data[start_idx + 1]
+                && data[start_idx + 2]
+                && data[start_idx + 3]
+                && data[start_idx + 4]
+                && !data[start_idx + 5]
+                && data[start_idx + 6]):
+                    if x >= 4 && !data[start_idx - 1] && !data[start_idx - 2] && !data[start_idx - 3] && !data[start_idx - 4]:
                         rating += 40
-                    if x <= (module_count - 10) && data[start_idx + 7] && data[start_idx + 8] && data[start_idx + 9] && data[start_idx + 10]:
+                    if x <= (module_count - 11) && !data[start_idx + 7] && !data[start_idx + 8] && !data[start_idx + 9] && !data[start_idx + 10]:
                         rating += 40
 
     for x: int in range(module_count):
         for y: int in range(module_count - 6):
-            if (!data[x + y * module_count]
-                && data[x + (y + 1) * module_count]
-                && !data[x + (y + 2) * module_count]
-                && !data[x + (y + 3) * module_count]
-                && !data[x + (y + 4) * module_count]
-                && data[x + (y + 5) * module_count]
-                && !data[x + (y + 6) * module_count]):
-                    if y >= 4 && data[x + (y - 1) * module_count] && data[x + (y - 2) * module_count] && data[x + (y - 3) * module_count] && data[x + (y - 4) * module_count]:
+            if (data[x + y * module_count]
+                && !data[x + (y + 1) * module_count]
+                && data[x + (y + 2) * module_count]
+                && data[x + (y + 3) * module_count]
+                && data[x + (y + 4) * module_count]
+                && !data[x + (y + 5) * module_count]
+                && data[x + (y + 6) * module_count]):
+                    if y >= 4 && !data[x + (y - 1) * module_count] && !data[x + (y - 2) * module_count] && !data[x + (y - 3) * module_count] && !data[x + (y - 4) * module_count]:
                         rating += 40
-                    if y <= (module_count - 11) && data[x + (y + 7) * module_count] && data[x + (y + 8) * module_count] && data[x + (y + 9) * module_count] && data[x + (y + 10) * module_count]:
+                    if y <= (module_count - 11) && !data[x + (y + 7) * module_count] && !data[x + (y + 8) * module_count] && !data[x + (y + 9) * module_count] && !data[x + (y + 10) * module_count]:
                         rating += 40
 
     # condition 4
-    var dark_mods: int = data.count(0)
+    var dark_mods: int = data.count(_DARK)
     var ratio: float = dark_mods / float(module_count * module_count)
     var percent: int = int((ratio * 100) - 50)
     rating += absi(percent) / 5 * 10
@@ -1382,7 +1404,7 @@ func _place_modules(structured_data: BitStream) -> PackedByteArray:
     _place_timing_patterns(qr_data, module_count)
 
     # dark module
-    qr_data[8 + (module_count - 8) * module_count] = 1
+    qr_data[8 + (module_count - 8) * module_count] = _DARK
 
     # place data
     _place_data(qr_data, module_count, alignment_pattern_pos, structured_data)

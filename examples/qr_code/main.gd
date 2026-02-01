@@ -33,7 +33,7 @@ func _on_input_data_text_text_changed() -> void:
 
 func _on_encoding_item_selected(_index: int) -> void:
 	self._qr_rect.mode = self._encoding.get_selected_id() as QRCode.Mode
-	if self._qr_rect.mode == QRCode.Mode.BYTE && !self._qr_rect.use_eci:
+	if self._qr_rect.mode == QRCode.Mode.BYTE:
 		self._use_eci.button_pressed = true
 		self._use_eci.disabled = true
 	else:

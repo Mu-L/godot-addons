@@ -158,6 +158,10 @@ Shift JIS encoding utility.
 
 ## Changelog
 
+### 1.3.1
+
+- Fix various bugs, which could lead to crashes and too large versions being selected
+
 ### 1.3.0
 
 - Upgrade `.import`s to Godot 4.6
