@@ -161,6 +161,7 @@ Shift JIS encoding utility.
 ### 1.3.1
 
 - Fix various bugs, which could lead to crashes and too large versions being selected
+- Performance improvements
 
 ### 1.3.0
 

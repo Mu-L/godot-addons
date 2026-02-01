@@ -24,9 +24,9 @@ func to_byte_array() -> PackedByteArray:
 
     var cur_byte: int = 0
     for idx: int in range(self._data.size()):
-        var byte_idx: int = 7 - idx % 8
+        var byte_idx: int = 7 - idx & 7
         if self._data[idx]:
-            cur_byte = _set_state(cur_byte, byte_idx)
+            cur_byte |= (1 << byte_idx)
         if (idx != 0 && byte_idx == 0) || idx == self._data.size() - 1:
             byte_arr.append(cur_byte)
             cur_byte = 0
@@ -47,11 +47,11 @@ func append_byte_array(arr: PackedByteArray) -> void:
 
 func prepend(value: int, total_bits: int) -> void:
     for idx: int in range(total_bits - 1, -1, -1):
-        self._data.insert(0, int(get_state(value, idx)))
+        self._data.insert(0, int((value & (1 << idx)) != 0))
 
 func append(value: int, total_bits: int) -> void:
     for idx: int in range(total_bits - 1, -1, -1):
-        self._data.append(int(get_state(value, idx)))
+        self._data.append(int((value & (1 << idx)) != 0))
 
 func set_bit(idx: int, bit: bool) -> void:
     self._data[idx] = int(bit)
@@ -62,23 +62,14 @@ func get_bit(idx: int) -> bool:
 func _to_string() -> String:
     var val: String = ""
     for idx: int in range(self._data.size()):
-        if (idx + 1) % 8 == 1:
+        if (idx + 1) & 7 == 1:
             val += "["
         val += str(self._data[idx])
-        if (idx + 1) % 8 == 0:
+        if (idx + 1) & 7 == 0:
             val += "]"
-        if (idx + 1) % 4 == 0:
+        if (idx + 1) & 3 == 0:
             val += " "
     val = val.strip_edges()
     if val[-1] != "]":
         val += "]"
     return val
-
-static func _set_state(value: int, idx: int) -> int:
-    return value | (1 << idx)
-
-static func get_state(value: int, idx: int) -> bool:
-    return (value & (1 << idx))
-
-static func toggle_state(value: int, idx: int) -> int:
-    return value ^ (1 << idx)
