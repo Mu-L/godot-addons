@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cn383mw8drmm5"
-path="res://.godot/imported/qr_code.svg-8435c81cb02327831b4999115d02816f.ctex"
+path="res://.godot/imported/icon.svg-f2b8283af99fea807d6be2c96605b944.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/qr_code/qr_code.svg"
-dest_files=["res://.godot/imported/qr_code.svg-8435c81cb02327831b4999115d02816f.ctex"]
+source_file="res://addons/kenyoni/qr_code/icon.svg"
+dest_files=["res://.godot/imported/icon.svg-f2b8283af99fea807d6be2c96605b944.ctex"]
 
 [params]
 

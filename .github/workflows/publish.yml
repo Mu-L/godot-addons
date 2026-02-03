@@ -59,6 +59,11 @@ jobs:
             name: "POT Generation",
           }
           - {
+            id: "kenyoni/qr_code",
+            id-name: "qr_code",
+            name: "QR Code",
+          }
+          - {
             id: "kenyoni/remove_orphan_uid",
             id-name: "remove_orphan_uid",
             name: "Remove Orphan UID",
@@ -67,11 +72,6 @@ jobs:
             id: "licenses",
             id-name: "licenses",
             name: "License Manager",
-          }
-          - {
-            id: "qr_code",
-            id-name: "qr_code",
-            name: "QR Code",
           }
           - {
             id: "texture_button_colored",

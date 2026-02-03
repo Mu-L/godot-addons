@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://u78fl5760vh3"]
 
 [ext_resource type="Script" uid="uid://w0qw7vc2yr4y" path="res://examples/qr_code/main.gd" id="1_55tdt"]
-[ext_resource type="Script" uid="uid://dynulhnyq5hpq" path="res://addons/qr_code/qr_code_rect.gd" id="1_t1m1p"]
+[ext_resource type="Script" uid="uid://dynulhnyq5hpq" path="res://addons/kenyoni/qr_code/qr_code_rect.gd" id="1_t1m1p"]
 
 [node name="HBoxContainer" type="HBoxContainer" unique_id=1018684991 node_paths=PackedStringArray("_input_data_text", "_encoding", "_error_correction", "_use_eci", "_eci_value", "_version", "_mask_pattern", "_module_px_size", "_qr_rect")]
 anchors_preset = 15
@@ -213,6 +213,7 @@ layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 script = ExtResource("1_t1m1p")
+auto_update = true
 mode = 1
 error_correction = 1
 use_eci = false

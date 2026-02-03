@@ -1,6 +1,6 @@
 extends HBoxContainer
 
-const QRCode = preload("res://addons/qr_code/qr_code.gd")
+const QRCode = preload("res://addons/kenyoni/qr_code/qr_code.gd")
 
 @export var _input_data_text: TextEdit
 @export var _encoding: OptionButton
