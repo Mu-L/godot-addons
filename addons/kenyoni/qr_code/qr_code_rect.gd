@@ -48,11 +48,11 @@ var dark_module_color: Color = Color.BLACK:
 ## Automatically set the module pixel size based on the size.
 ## Do not use expand mode KEEP_SIZE when using it.
 ## Turn this off when the QR Code is resized often, as it impacts the performance quite heavily.
-var auto_module_px_size: bool = true:
-    set = set_auto_module_px_size
+var auto_module_size: bool = true:
+    set = set_auto_module_size
 ## Use that many pixel for one module.
-var module_px_size: int = 1:
-    set = set_module_px_size
+var module_size: int = 1:
+    set = set_module_size
 ## Use that many modules for the quiet zone. A value of 4 is recommended.
 var quiet_zone_size: int = 4:
     set = set_quiet_zone_size
@@ -208,21 +208,21 @@ func set_dark_module_color(new_dark_module_color: Color) -> void:
     if self.auto_update:
         self._update_texture()
 
-func set_auto_module_px_size(new_auto_module_px_size: bool) -> void:
-    if auto_module_px_size == new_auto_module_px_size:
+func set_auto_module_size(new_auto_module_size: bool) -> void:
+    if auto_module_size == new_auto_module_size:
         return
-    auto_module_px_size = new_auto_module_px_size
+    auto_module_size = new_auto_module_size
     self.notify_property_list_changed()
     self.update_configuration_warnings()
     if self.auto_update:
         self._update_texture()
 
-func set_module_px_size(new_module_px_size: int) -> void:
-    if module_px_size == new_module_px_size:
+func set_module_size(new_module_size: int) -> void:
+    if module_size == new_module_size:
         return
-    module_px_size = new_module_px_size
+    module_size = new_module_size
     # if not auto it was set directly
-    if ! self.auto_module_px_size && self.auto_update:
+    if ! self.auto_module_size && self.auto_update:
         self._update_texture()
 
 func set_quiet_zone_size(new_quiet_zone_size: int) -> void:
@@ -345,14 +345,14 @@ func _get_property_list() -> Array[Dictionary]:
             "usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE,
         },
         {
-            "name": "auto_module_px_size",
+            "name": "auto_module_size",
             "type": TYPE_BOOL,
             "usage": PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE,
         },
         {
-            "name": "module_px_size",
+            "name": "module_size",
             "type": TYPE_INT,
-            "usage": (PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_READ_ONLY) if self.auto_module_px_size else (PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE),
+            "usage": (PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_READ_ONLY) if self.auto_module_size else (PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE),
             "hint": PROPERTY_HINT_RANGE,
             "hint_string": "1,1,or_greater"
         },
@@ -369,7 +369,7 @@ func _validate_property(property: Dictionary) -> void:
         property.usage &= ~(PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_STORAGE)
 
 func _property_can_revert(property: StringName) -> bool:
-    return property in ["eci_value", "auto_version", "auto_mask_pattern", "light_module_color", "dark_module_color", "auto_module_px_size", "quiet_zone_size"]
+    return property in ["eci_value", "auto_version", "auto_mask_pattern", "light_module_color", "dark_module_color", "auto_module_size", "quiet_zone_size"]
 
 func _property_get_revert(property: StringName) -> Variant:
     match property:
@@ -383,7 +383,7 @@ func _property_get_revert(property: StringName) -> Variant:
             return Color.WHITE
         "dark_module_color":
             return Color.BLACK
-        "auto_module_px_size":
+        "auto_module_size":
             return true
         "quiet_zone_size":
             return 4
@@ -391,17 +391,17 @@ func _property_get_revert(property: StringName) -> Variant:
             return null
 
 func _get_configuration_warnings() -> PackedStringArray:
-    if self.auto_module_px_size && self.expand_mode == EXPAND_KEEP_SIZE:
+    if self.auto_module_size && self.expand_mode == EXPAND_KEEP_SIZE:
         return ["Do not use auto module px size AND keep size expand mode."]
     return []
 
 func _notification(what: int) -> void:
     match what:
         NOTIFICATION_RESIZED:
-            if self.auto_module_px_size && self.auto_update:
+            if self.auto_module_size && self.auto_update:
                 self._update_texture()
 
 func _update_texture() -> void:
-    if self.auto_module_px_size:
-        self.module_px_size = mini(self.size.x, self.size.y) / (self._qr.get_dimension() + 2 * self.quiet_zone_size)
-    self.texture = ImageTexture.create_from_image(QRCode.generate_image(self._cached_data, self.module_px_size, self.light_module_color, self.dark_module_color, self.quiet_zone_size))
+    if self.auto_module_size:
+        self.module_size = mini(self.size.x, self.size.y) / (self._qr.get_dimension() + 2 * self.quiet_zone_size)
+    self.texture = ImageTexture.create_from_image(QRCode.generate_image(self._cached_data, self.module_size, self.light_module_color, self.dark_module_color, self.quiet_zone_size))

@@ -9,7 +9,7 @@ const QRCode = preload("res://addons/kenyoni/qr_code/qr_code.gd")
 @export var _eci_value: OptionButton
 @export var _version: SpinBox
 @export var _mask_pattern: SpinBox
-@export var _module_px_size: SpinBox
+@export var _module_size: SpinBox
 
 @export var _qr_rect: QRCodeRect
 
@@ -25,7 +25,7 @@ func _update_values() -> void:
 
 	self._version.value = self._qr_rect.version
 	self._mask_pattern.value = self._qr_rect.mask_pattern
-	self._module_px_size.value = self._qr_rect.module_px_size
+	self._module_size.value = self._qr_rect.module_size
 
 func _on_input_data_text_text_changed() -> void:
 	self._qr_rect.data = self._input_data_text.text
@@ -81,13 +81,13 @@ func _on_dark_module_color_color_changed(color: Color) -> void:
 	self._qr_rect.dark_module_color = color
 	self._update_values()
 
-func _on_auto_module_px_size_toggled(button_pressed: bool) -> void:
-	self._qr_rect.auto_module_px_size = button_pressed
-	self._module_px_size.editable = !button_pressed
+func _on_auto_module_size_toggled(button_pressed: bool) -> void:
+	self._qr_rect.auto_module_size = button_pressed
+	self._module_size.editable = !button_pressed
 	self._update_values()
 
-func _on_module_px_size_value_changed(value: float) -> void:
-	self._qr_rect.module_px_size = int(value)
+func _on_module_size_value_changed(value: float) -> void:
+	self._qr_rect.module_size = int(value)
 	self._update_values()
 
 func _on_quiet_zone_size_value_changed(value: float) -> void:

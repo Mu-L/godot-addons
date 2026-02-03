@@ -902,12 +902,12 @@ func _init(error_correction_: ErrorCorrection = ErrorCorrection.LOW) -> void:
         _static_init()
 
 ## generate an QR code image
-static func generate_image(qr_data: PackedByteArray, module_px_size: int = 1, light_module_color: Color = Color.WHITE, dark_module_color: Color = Color.BLACK, quiet_zone_size: int = 4) -> Image:
-    module_px_size = maxi(1, module_px_size)
+static func generate_image(qr_data: PackedByteArray, module_size: int = 1, light_module_color: Color = Color.WHITE, dark_module_color: Color = Color.BLACK, quiet_zone_size: int = 4) -> Image:
+    module_size = maxi(1, module_size)
     quiet_zone_size = maxi(0, quiet_zone_size)
 
     var dimension: int = sqrt(qr_data.size())
-    var image_size: int = (dimension + 2 * quiet_zone_size) * module_px_size
+    var image_size: int = (dimension + 2 * quiet_zone_size) * module_size
     var image: Image = Image.create_empty(image_size, image_size, false, Image.FORMAT_RGB8)
     image.fill(light_module_color)
 
@@ -919,9 +919,9 @@ static func generate_image(qr_data: PackedByteArray, module_px_size: int = 1, li
                     color = light_module_color
                 _DARK:
                     color = dark_module_color
-            for offset_x: int in range(module_px_size):
-                for offset_y: int in range(module_px_size):
-                    image.set_pixel((x + quiet_zone_size) * module_px_size + offset_x, (y + quiet_zone_size) * module_px_size + offset_y, color)
+            for offset_x: int in range(module_size):
+                for offset_y: int in range(module_size):
+                    image.set_pixel((x + quiet_zone_size) * module_size + offset_x, (y + quiet_zone_size) * module_size + offset_y, color)
 
     return image
 
