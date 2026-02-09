@@ -28,6 +28,12 @@ Find the latest releases [here](https://github.com/kenyoni-software/godot-addons
 
     Utility to provide custom theme overrides for any node.
 
+-   [EAN-13 Barcode](addons/ean13.md){ .md-button .center-lg-button }
+
+    ---
+
+    EAN-13 barcode generator and nodes.
+
 -   [Git SHA Project Setting](addons/git_sha_project_setting.md){ .md-button .center-lg-button }
 
     ---

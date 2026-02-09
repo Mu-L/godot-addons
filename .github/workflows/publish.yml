@@ -54,6 +54,11 @@ jobs:
             name: "Plugin Reloader",
           }
           - {
+            id: "kenyoni/ean13",
+            id-name: "ean13",
+            name: "EAN-13 Barcode",
+          }
+          - {
             id: "kenyoni/pot_generation",
             id-name: "pot_generation",
             name: "POT Generation",
