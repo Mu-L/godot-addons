@@ -167,14 +167,14 @@ Shift JIS encoding utility.
 ### 2.0.0
 
 - Breaking Changes:
-  - Moved to `res://addons/kenyoni/qr_code`
-  - Renamed `QRCode.get_module_count` to `QRCode.get_dimension`
-  - `QRCode` is no longer caching the encoding result
-  - `QRCode.generate_image` is now static
-  - Renamed `QRCodeRect.module_px_size` to `QRCodeRect.module_size`
-  - Renamed `QRCodeRect.auto_module_px_size` to `QRCodeRect.auto_module_size`
-  - `QRCodeRect` now caches the encoding result, changing appearance properties will not encode again
-  - `QRCodeRect` no longer saves the texture to the scene file
+    - Moved to `res://addons/kenyoni/qr_code`
+    - Renamed `QRCode.get_module_count` to `QRCode.get_dimension`
+    - `QRCode` is no longer caching the encoding result
+    - `QRCode.generate_image` is now static
+    - Renamed `QRCodeRect.module_px_size` to `QRCodeRect.module_size`
+    - Renamed `QRCodeRect.auto_module_px_size` to `QRCodeRect.auto_module_size`
+    - `QRCodeRect` now caches the encoding result, changing appearance properties will not encode again
+    - `QRCodeRect` no longer saves the texture to the scene file
 - Added `auto_update` property to `QRCodeRect`
 - Added `update` method to `QRCodeRect`
 - Various bug fixes and code improvements
