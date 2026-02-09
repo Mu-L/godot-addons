@@ -1,8 +1,8 @@
 extends RefCounted
 
-const BitStream := preload("res://addons/qr_code/bit_stream.gd")
-const ReedSolomon := preload("res://addons/qr_code/reed_solomon.gd")
-const ShiftJIS := preload("res://addons/qr_code/shift_jis.gd")
+const BitStream := preload("res://addons/kenyoni/qr_code/bit_stream.gd")
+const ReedSolomon := preload("res://addons/kenyoni/qr_code/reed_solomon.gd")
+const ShiftJIS := preload("res://addons/kenyoni/qr_code/shift_jis.gd")
 
 ## Encoding Mode
 enum Mode {
@@ -681,11 +681,11 @@ const _ALIGNMENT_PATTERN_POSITIONS: Array[Array] = [
 ## remainder bits after structured data bits
 const _REMAINDER_BITS: Array[int] = [0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0]
 
+const _DARK: int = 1
+const _LIGHT: int = 0
+
 static var _number_rx: RegEx = RegEx.create_from_string("[^\\d]*")
 static var _alphanumeric_rx: RegEx = RegEx.create_from_string("[^0-9A-Z $%*+\\-.\\/:]*")
-
-## cached qr data
-var _cached_qr: PackedByteArray = []
 
 ## this can be either a String or PackedByteArray, based on the current encoding mode
 var _input_data: Variant = "":
@@ -719,19 +719,16 @@ func set_auto_version(new_auto_version: bool) -> void:
     if new_auto_version == auto_version:
         return
     auto_version = new_auto_version
-    self._clear_cache()
 
 func set_version(new_version: int) -> void:
     if new_version == version:
         return
     version = clampi(new_version, 1, 40)
-    self._clear_cache()
 
 func set_error_correction(new_error_correction: ErrorCorrection) -> void:
     if new_error_correction == error_correction:
         return
     error_correction = new_error_correction
-    self._clear_cache()
 
 func set_mode(new_mode: Mode) -> void:
     if new_mode == mode:
@@ -743,39 +740,36 @@ func set_mode(new_mode: Mode) -> void:
             self._input_data = ""
         Mode.BYTE:
             self._input_data = PackedByteArray()
-    self._clear_cache()
 
 func set_use_eci(new_use_eci: bool) -> void:
     if new_use_eci == use_eci:
         return
     use_eci = new_use_eci
-    self._clear_cache()
 
 func set_eci_value(new_eci_value: int) -> void:
     if new_eci_value == eci_value:
         return
+    if !ECI.values().has(new_eci_value):
+        return
     eci_value = new_eci_value
-    self._clear_cache()
 
 func set_auto_mask_pattern(new_auto_mask_pattern: bool) -> void:
     if new_auto_mask_pattern == auto_mask_pattern:
         return
     auto_mask_pattern = new_auto_mask_pattern
-    self._clear_cache()
 
 func set_mask_pattern(new_mask_pattern: int) -> void:
     if new_mask_pattern == mask_pattern:
         return
     mask_pattern = clampi(new_mask_pattern, 0, 7)
-    self._clear_cache()
 
 ## return the data which was put in
 func get_input_data() -> Variant:
     return _input_data
 
-## get module count of one axis
-func get_module_count() -> int:
-    return _calc_module_count(self.version)
+## returns the dimension for the current version.
+func get_dimension() -> int:
+    return _calc_dimension(self.version)
 
 ## returns ONE minimum version which fits the data
 ## the returned version is just an approach
@@ -783,16 +777,24 @@ func get_module_count() -> int:
 func calc_min_version() -> int:
     var input_size: int = self._get_input_data_size()
     for idx: int in range(_DATA_CAPACITY.size()):
-        var cap: int = _DATA_CAPACITY[idx][self.error_correction][self.mode]
-        if self.eci_value != ECI.ISO_8859_1:
+        var cap: int = _DATA_CAPACITY[idx][ self.error_correction][ self.mode]
+        if self.use_eci:
             # subtract roughly eci header size
-            cap -= 4
+            match self.mode:
+                Mode.NUMERIC:
+                    cap -= 4
+                Mode.ALPHANUMERIC:
+                    cap -= 3
+                Mode.BYTE:
+                    cap -= 2
+                Mode.KANJI:
+                    cap -= 1
         if input_size <= cap:
             return idx + 1
     return -1
 
-static func _get_alphanumeric_number(char: String) -> int:
-    return _ALPHANUMERIC_CHARACTERS[char]
+static func _get_alphanumeric_number(chr: String) -> int:
+    return _ALPHANUMERIC_CHARACTERS[chr]
 
 # functions are adapted to our starting point 0, 0
 static func _mask_pattern_fns() -> Array[Callable]:
@@ -809,32 +811,32 @@ static func _mask_pattern_fns() -> Array[Callable]:
 
 # helper function check if a bit is set
 static func _get_state(value: int, idx: int) -> bool:
-    return (value & (1 << idx))
+    return value & (1 << idx) != 0
 
 func _get_data_codeword_count() -> int:
-    return _ERROR_CORRECTION[self.version - 1][self.error_correction][0]
+    return _ERROR_CORRECTION[ self.version - 1][ self.error_correction][0]
 
 func _get_ec_codeword_count() -> int:
-    return _ERROR_CORRECTION[self.version - 1][self.error_correction][1]
+    return _ERROR_CORRECTION[ self.version - 1][ self.error_correction][1]
 
 func _get_ec_block_count(group: int) -> int:
-    return _ERROR_CORRECTION[self.version - 1][self.error_correction][2 + (group - 1) * 2]
+    return _ERROR_CORRECTION[ self.version - 1][ self.error_correction][2 + (group - 1) * 2]
 
 func _get_ec_block_codeword_count(group: int) -> int:
-    return _ERROR_CORRECTION[self.version - 1][self.error_correction][3 + (group - 1) * 2]
+    return _ERROR_CORRECTION[ self.version - 1][ self.error_correction][3 + (group - 1) * 2]
 
-static func _calc_module_count(version: int) -> int:
+static func _calc_dimension(version: int) -> int:
     return 21 + 4 * (version - 1)
 
 func _get_alignment_pattern_positions() -> Array[Vector2i]:
-    var module_count: int = self.get_module_count()
+    var dimension: int = self.get_dimension()
     var positions: Array[Vector2i] = []
-    for row: int in _ALIGNMENT_PATTERN_POSITIONS[self.version - 1]:
-        for col: int in _ALIGNMENT_PATTERN_POSITIONS[self.version - 1]:
+    for row: int in _ALIGNMENT_PATTERN_POSITIONS[ self.version - 1]:
+        for col: int in _ALIGNMENT_PATTERN_POSITIONS[ self.version - 1]:
             # do not overlap finder positions
-            if row - 2 < 8 && col - 2 < 8 || \
-                row > module_count - 8 && col - 2 < 8 || \
-                row - 2 < 8 && col > module_count - 8:
+            if (row - 2 < 8 && col - 2 < 8) || \
+                (row - 2 < 8 && col + 2 > dimension - 8) || \
+                (row + 2 >= dimension - 8 && col - 2 < 8):
                 continue
             positions.append(Vector2i(row, col))
     return positions
@@ -900,73 +902,58 @@ func _init(error_correction_: ErrorCorrection = ErrorCorrection.LOW) -> void:
         _static_init()
 
 ## generate an QR code image
-func generate_image(module_px_size: int = 1, light_module_color: Color = Color.WHITE, dark_module_color: Color = Color.BLACK, quiet_zone_size: int = 4) -> Image:
-    module_px_size = maxi(1, module_px_size)
+static func generate_image(qr_data: PackedByteArray, module_size: int = 1, light_module_color: Color = Color.WHITE, dark_module_color: Color = Color.BLACK, quiet_zone_size: int = 4) -> Image:
+    module_size = maxi(1, module_size)
     quiet_zone_size = maxi(0, quiet_zone_size)
 
-    var qr_code: PackedByteArray = self.encode()
-
-    var module_count: int = self.get_module_count()
-    var image_size: int = (module_count + 2 * quiet_zone_size) * module_px_size
-    var image: Image = Image.create(image_size, image_size, false, Image.FORMAT_RGB8)
+    var dimension: int = sqrt(qr_data.size())
+    var image_size: int = (dimension + 2 * quiet_zone_size) * module_size
+    var image: Image = Image.create_empty(image_size, image_size, false, Image.FORMAT_RGB8)
     image.fill(light_module_color)
 
-    for y: int in range(module_count):
-        for x: int in range(module_count):
+    for y: int in range(dimension):
+        for x: int in range(dimension):
             var color: Color = Color.PINK
-            match qr_code[x + y * module_count]:
-                0:
+            match qr_data[x + y * dimension]:
+                _LIGHT:
                     color = light_module_color
-                1:
+                _DARK:
                     color = dark_module_color
-            for offset_x: int in range(module_px_size):
-                for offset_y: int in range(module_px_size):
-                    image.set_pixel((x + quiet_zone_size) * module_px_size + offset_x, (y + quiet_zone_size) * module_px_size + offset_y, color)
+            for offset_x: int in range(module_size):
+                for offset_y: int in range(module_size):
+                    image.set_pixel((x + quiet_zone_size) * module_size + offset_x, (y + quiet_zone_size) * module_size + offset_y, color)
 
     return image
 
 func put_numeric(number: String) -> void:
-    if self.mode != Mode.NUMERIC || number != self._input_data:
-        self._clear_cache()
     self.mode = Mode.NUMERIC
     self._input_data = _number_rx.sub(number, "", true)
 
 func put_alphanumeric(text: String) -> void:
-    if self.mode != Mode.ALPHANUMERIC || text != self._input_data:
-        self._clear_cache()
     self.mode = Mode.ALPHANUMERIC
     self._input_data = _alphanumeric_rx.sub(text, "", true)
 
 func put_byte(data: PackedByteArray) -> void:
-    if self.mode != Mode.BYTE || data != self._input_data:
-        self._clear_cache()
     self.mode = Mode.BYTE
     self._input_data = data
 
 func put_kanji(data: String) -> void:
-    if self.mode != Mode.KANJI || data != self._input_data:
-        self._clear_cache()
     self.mode = Mode.KANJI
+    # clear invalid characters
     self._input_data = ShiftJIS.get_string_from_shift_jis_2004(ShiftJIS.to_shift_jis_2004_buffer(data))
 
 ## returns row by row
-## to get row size use get_module_count
+## to get row size use get_dimension
 func encode() -> PackedByteArray:
-    if !self._cached_qr.is_empty():
-        return self._cached_qr.duplicate()
-
     if self.auto_version:
         self.version = self.calc_min_version()
 
     var data_stream: BitStream = self._encode_data()
     var err_correction: Array[PackedByteArray] = self._error_correction(data_stream)
     var structured_data: BitStream = self._structure_data(data_stream, err_correction)
-    var qr_data: PackedByteArray = self._place_modules(structured_data)
-    qr_data = self._mask_qr(qr_data)
+    var module_data: PackedByteArray = self._place_modules(structured_data)
 
-    self._cached_qr = qr_data.duplicate()
-
-    return qr_data
+    return self._mask_qr(module_data)
 
 func _encode_data() -> BitStream:
     var stream: BitStream = BitStream.new()
@@ -1018,9 +1005,6 @@ func _encode_data() -> BitStream:
             stream.append(17, 8)
 
     return stream
-
-func _clear_cache() -> void:
-    self._cached_qr.clear()
 
 func _encode_numeric(stream: BitStream) -> void:
     assert(typeof(self._input_data) == TYPE_STRING)
@@ -1150,71 +1134,79 @@ func _structure_data(data_stream: BitStream, err_correction: Array[PackedByteArr
 
 # pos is upper left black corner
 # 7 x 7 size
-static func _place_finder(data: PackedByteArray, module_count: int, pos: Vector2i) -> void:
+static func _place_finder(data: PackedByteArray, dimension: int, pos: Vector2i) -> void:
     for row: int in range(7):
         for col: int in range(7):
-            data[(pos.x + row) + (pos.y + col) * module_count] = 1
+            data[(pos.x + row) + (pos.y + col) * dimension] = _DARK
     for idx: int in range(5):
-        data[(pos.x + 1 + idx) + (pos.y + 1) * module_count] = 0
-        data[(pos.x + 1 + idx) + (pos.y + 5) * module_count] = 0
+        data[(pos.x + 1 + idx) + (pos.y + 1) * dimension] = _LIGHT
+        data[(pos.x + 1 + idx) + (pos.y + 5) * dimension] = _LIGHT
     for idx: int in range(3):
-        data[(pos.x + 1) + (pos.y + 2 + idx) * module_count] = 0
-        data[(pos.x + 5) + (pos.y + 2 + idx) * module_count] = 0
+        data[(pos.x + 1) + (pos.y + 2 + idx) * dimension] = _LIGHT
+        data[(pos.x + 5) + (pos.y + 2 + idx) * dimension] = _LIGHT
 
 # pos is center
 # 5 x 5 size
-static func _place_align_pattern(data: PackedByteArray, module_count: int, pos: Vector2i) -> void:
+static func _place_align_pattern(data: PackedByteArray, dimension: int, pos: Vector2i) -> void:
     for row: int in range(5):
         for col: int in range(5):
-            data[(pos.x - 2 + row) + (pos.y - 2 + col) * module_count] = 1
+            data[(pos.x - 2 + row) + (pos.y - 2 + col) * dimension] = _DARK
     for idx: int in range(3):
-        data[(pos.x - 1 + idx) + (pos.y - 1) * module_count] = 0
-        data[(pos.x - 1 + idx) + (pos.y + 1) * module_count] = 0
-    data[(pos.x - 1) + (pos.y) * module_count] = 0
-    data[(pos.x + 1) + (pos.y) * module_count] = 0
+        data[(pos.x - 1 + idx) + (pos.y - 1) * dimension] = _LIGHT
+        data[(pos.x - 1 + idx) + (pos.y + 1) * dimension] = _LIGHT
+    data[(pos.x - 1) + (pos.y) * dimension] = _LIGHT
+    data[(pos.x + 1) + (pos.y) * dimension] = _LIGHT
 
-static func _place_separators(data: PackedByteArray, module_count: int) -> void:
+static func _place_separators(data: PackedByteArray, dimension: int) -> void:
     for idx: int in range(8):
         # upper left
-        data[idx + 7 * module_count] = 0
-        data[7 + idx * module_count] = 0
+        data[idx + 7 * dimension] = _LIGHT
+        data[7 + idx * dimension] = _LIGHT
         # lower left
-        data[idx + (module_count - 8) * module_count] = 0
-        data[(module_count - 8) + idx * module_count] = 0
+        data[idx + (dimension - 8) * dimension] = _LIGHT
+        data[(dimension - 8) + idx * dimension] = _LIGHT
         # upper right
-        data[(module_count - idx - 1) + 7 * module_count] = 0
-        data[7 + (module_count - idx - 1) * module_count] = 0
+        data[(dimension - idx - 1) + 7 * dimension] = _LIGHT
+        data[7 + (dimension - idx - 1) * dimension] = _LIGHT
 
-static func _place_timing_patterns(data: PackedByteArray, module_count: int) -> void:
-    for idx: int in range(module_count - 6 * 2):
-        data[6 + idx + 6 * module_count] = (idx + 1) % 2
-        data[6 + (6 + idx) * module_count] = (idx + 1) % 2
+static func _place_timing_patterns(data: PackedByteArray, dimension: int) -> void:
+    for idx: int in range(dimension - 6 * 2):
+        data[6 + idx + 6 * dimension] = (idx + 1) % 2
+        data[6 + (6 + idx) * dimension] = (idx + 1) % 2
 
-static func _is_data_module(module_count: int, alignment_pattern_pos: Array[Vector2i], pos: Vector2i) -> bool:
-    # finder with separation and format information area: upper left finder, upper right finder, lower left finder
-    # dark module is also included
-    if (pos.x <= 8 && pos.y <= 8) || (pos.x >= (module_count - 8) && pos.y <= 8) || (pos.x <= 8 && pos.y >= (module_count - 8)):
+static func _is_data_module(dimension: int, alignment_pattern_pos: Array[Vector2i], pos: Vector2i) -> bool:
+    # finder patterns with separators and format information area
+    if (pos.x <= 8 && pos.y <= 8) || \
+       (pos.x >= dimension - 8 && pos.y <= 8) || \
+       (pos.x <= 8 && pos.y >= dimension - 8):
         return false
-    # timing pattern
-    if pos.x == 6 || pos.y == 6:
+    
+    # timing patterns (run through middle, already excluded in finder areas)
+    if (pos.x == 6 && pos.y >= 8 && pos.y < dimension - 8) || \
+       (pos.y == 6 && pos.x >= 8 && pos.x < dimension - 8):
         return false
-    # version information area
-    # for version >= 7, upper and lower
-    # this check, will also success if it is in a finder area
-    if module_count >= 45 && ((pos.x >= module_count - 11 && pos.y <= 5) || (pos.x <= 5 && pos.y >= module_count - 11)):
-        return false
-
-    # check if in alignment pattern
-    for align_pos: Vector2i in alignment_pattern_pos:
-        if pos.x >= align_pos.x - 2 && pos.x <= align_pos.x + 2 && pos.y >= align_pos.y - 2 && pos.y <= align_pos.y + 2:
+    
+    # version information area (version >= 7 only)
+    if dimension >= 45:
+        # Bottom-left: 6 rows × 3 columns
+        if pos.x <= 5 && pos.y >= dimension - 11 && pos.y <= dimension - 9:
             return false
-
+        # Top-right: 3 rows × 6 columns  
+        if pos.y <= 5 && pos.x >= dimension - 11 && pos.x <= dimension - 9:
+            return false
+    
+    # alignment patterns
+    for align_pos: Vector2i in alignment_pattern_pos:
+        if pos.x >= align_pos.x - 2 && pos.x <= align_pos.x + 2 && \
+           pos.y >= align_pos.y - 2 && pos.y <= align_pos.y + 2:
+            return false
+    
     return true
 
-static func _place_data(data: PackedByteArray, module_count: int, alignment_pattern_pos: Array[Vector2i], structured_data: BitStream) -> void:
+static func _place_data(data: PackedByteArray, dimension: int, alignment_pattern_pos: Array[Vector2i], structured_data: BitStream) -> void:
     var data_idx: int = 0
     # base column where to go up or down
-    var base_col: int = module_count - 1
+    var base_col: int = dimension - 1
     var upwards: bool = true
 
     while base_col > 0:
@@ -1222,13 +1214,13 @@ static func _place_data(data: PackedByteArray, module_count: int, alignment_patt
         if base_col == 6:
             base_col -= 1
 
-        for row: int in range(module_count):
+        for row: int in range(dimension):
             if upwards:
-                row = module_count - 1 - row
+                row = dimension - 1 - row
             for offset: int in range(2):
                 var pos: Vector2i = Vector2i(base_col - offset, row)
-                if _is_data_module(module_count, alignment_pattern_pos, pos):
-                    data[pos.x + pos.y * module_count] = int(structured_data.get_bit(data_idx))
+                if _is_data_module(dimension, alignment_pattern_pos, pos):
+                    data[pos.x + pos.y * dimension] = int(structured_data.get_bit(data_idx))
                     data_idx += 1
 
         base_col -= 2
@@ -1237,16 +1229,16 @@ static func _place_data(data: PackedByteArray, module_count: int, alignment_patt
     # all data modules placed
     assert(data_idx == structured_data.size(), "failed to place all data (%d of %d)" % [data_idx, structured_data.size()])
 
-static func _calc_mask_rating(data: PackedByteArray, module_count: int) -> int:
+static func _calc_mask_rating(data: PackedByteArray, dimension: int) -> int:
     var rating: int = 0
 
     # condition 1
     # horizontal
-    for y: int in range(module_count):
+    for y: int in range(dimension):
         var count: int = 0
         var block_value: int = 0
-        for x: int in range(module_count):
-            var cur_value: int = data[x + y * module_count]
+        for x: int in range(dimension):
+            var cur_value: int = data[x + y * dimension]
             if cur_value == block_value:
                 count += 1
             else:
@@ -1257,11 +1249,11 @@ static func _calc_mask_rating(data: PackedByteArray, module_count: int) -> int:
         if count >= 5:
             rating += count - 2
     # vertical
-    for x: int in range(module_count):
+    for x: int in range(dimension):
         var count: int = 0
         var block_value: int = 0
-        for y: int in range(module_count):
-            var cur_value: int = data[x + y * module_count]
+        for y: int in range(dimension):
+            var cur_value: int = data[x + y * dimension]
             if cur_value == block_value:
                 count += 1
             else:
@@ -1273,50 +1265,50 @@ static func _calc_mask_rating(data: PackedByteArray, module_count: int) -> int:
             rating += count - 2
 
     # condition 2
-    for x: int in range(module_count - 1):
-        for y: int in range(module_count - 1):
-            var val: int = data[x + y * module_count] + data[x + 1 + y * module_count] + data[x + (y + 1) * module_count] + data[x + 1 + (y + 1) * module_count]
+    for x: int in range(dimension - 1):
+        for y: int in range(dimension - 1):
+            var val: int = data[x + y * dimension] + data[x + 1 + y * dimension] + data[x + (y + 1) * dimension] + data[x + 1 + (y + 1) * dimension]
             if val == 0 || val == 4:
                 rating += 3
 
     # condition 3
-    for y: int in range(module_count):
-        for x: int in range(module_count - 6):
-            var start_idx: int = x + y * module_count
-            if (!data[start_idx]
-                && data[start_idx + 1]
-                && !data[start_idx + 2]
-                && !data[start_idx + 3]
-                && !data[start_idx + 4]
-                && data[start_idx + 5]
-                && !data[start_idx + 6]):
-                    if x >= 4 && data[start_idx - 1] && data[start_idx - 2] && data[start_idx - 3] && data[start_idx - 4]:
+    for y: int in range(dimension):
+        for x: int in range(dimension - 6):
+            var start_idx: int = x + y * dimension
+            if (data[start_idx]
+                && !data[start_idx + 1]
+                && data[start_idx + 2]
+                && data[start_idx + 3]
+                && data[start_idx + 4]
+                && !data[start_idx + 5]
+                && data[start_idx + 6]):
+                    if x >= 4 && !data[start_idx - 1] && !data[start_idx - 2] && !data[start_idx - 3] && !data[start_idx - 4]:
                         rating += 40
-                    if x <= (module_count - 10) && data[start_idx + 7] && data[start_idx + 8] && data[start_idx + 9] && data[start_idx + 10]:
+                    if x <= (dimension - 11) && !data[start_idx + 7] && !data[start_idx + 8] && !data[start_idx + 9] && !data[start_idx + 10]:
                         rating += 40
 
-    for x: int in range(module_count):
-        for y: int in range(module_count - 6):
-            if (!data[x + y * module_count]
-                && data[x + (y + 1) * module_count]
-                && !data[x + (y + 2) * module_count]
-                && !data[x + (y + 3) * module_count]
-                && !data[x + (y + 4) * module_count]
-                && data[x + (y + 5) * module_count]
-                && !data[x + (y + 6) * module_count]):
-                    if y >= 4 && data[x + (y - 1) * module_count] && data[x + (y - 2) * module_count] && data[x + (y - 3) * module_count] && data[x + (y - 4) * module_count]:
+    for x: int in range(dimension):
+        for y: int in range(dimension - 6):
+            if (data[x + y * dimension]
+                && !data[x + (y + 1) * dimension]
+                && data[x + (y + 2) * dimension]
+                && data[x + (y + 3) * dimension]
+                && data[x + (y + 4) * dimension]
+                && !data[x + (y + 5) * dimension]
+                && data[x + (y + 6) * dimension]):
+                    if y >= 4 && !data[x + (y - 1) * dimension] && !data[x + (y - 2) * dimension] && !data[x + (y - 3) * dimension] && !data[x + (y - 4) * dimension]:
                         rating += 40
-                    if y <= (module_count - 11) && data[x + (y + 7) * module_count] && data[x + (y + 8) * module_count] && data[x + (y + 9) * module_count] && data[x + (y + 10) * module_count]:
+                    if y <= (dimension - 11) && !data[x + (y + 7) * dimension] && !data[x + (y + 8) * dimension] && !data[x + (y + 9) * dimension] && !data[x + (y + 10) * dimension]:
                         rating += 40
 
     # condition 4
-    var dark_mods: int = data.count(0)
-    var ratio: float = dark_mods / float(module_count * module_count)
+    var dark_mods: int = data.count(_DARK)
+    var ratio: float = dark_mods / float(dimension * dimension)
     var percent: int = int((ratio * 100) - 50)
     rating += absi(percent) / 5 * 10
     return rating
 
-static func _place_format(qr_data: PackedByteArray, module_count: int, error_corr: ErrorCorrection, mask_pattern_val: int) -> void:
+static func _place_format(qr_data: PackedByteArray, dimension: int, error_corr: ErrorCorrection, mask_pattern_val: int) -> void:
     var base_code: int = (int(error_corr) << 3) | mask_pattern_val
 
     var code: int = base_code
@@ -1331,15 +1323,15 @@ static func _place_format(qr_data: PackedByteArray, module_count: int, error_cor
         if idx > 5:
             pos += 1
         # horizontal
-        qr_data[pos + 8 * module_count] = int(_get_state(code, 14 - idx))
+        qr_data[pos + 8 * dimension] = int(_get_state(code, 14 - idx))
         # vertical
-        qr_data[8 + pos * module_count] = int(_get_state(code, idx))
+        qr_data[8 + pos * dimension] = int(_get_state(code, idx))
     # lower left finder
     for idx: int in range(7):
-        qr_data[8 + (module_count - 1 - idx) * module_count] = int(_get_state(code, 14 - idx))
+        qr_data[8 + (dimension - 1 - idx) * dimension] = int(_get_state(code, 14 - idx))
     # upper right finder
     for idx: int in range(8):
-        qr_data[(module_count - 1 - idx) + 8 * module_count] = int(_get_state(code, idx))
+        qr_data[(dimension - 1 - idx) + 8 * dimension] = int(_get_state(code, idx))
 
 static func _place_version(qr_data: PackedByteArray, version: int) -> void:
     if version < 7:
@@ -1350,12 +1342,12 @@ static func _place_version(qr_data: PackedByteArray, version: int) -> void:
         code = (code << 1) ^ ((code >> 11) * 0x1F25)
     code = version << 12 | code
 
-    var module_count: int = _calc_module_count(version)
+    var dimension: int = _calc_dimension(version)
     for idx: int in range(18):
         var x: int = idx / 3
-        var y: int = module_count - 11 + idx % 3
-        qr_data[x + y * module_count] = int(_get_state(code, idx))
-        qr_data[y + x * module_count] = int(_get_state(code, idx))
+        var y: int = dimension - 11 + idx % 3
+        qr_data[x + y * dimension] = int(_get_state(code, idx))
+        qr_data[y + x * dimension] = int(_get_state(code, idx))
 
 # returns qr module data, ordered by rows
 # (col/x, row/y)       | index
@@ -1364,48 +1356,48 @@ static func _place_version(qr_data: PackedByteArray, version: int) -> void:
 # (0, 2) (1, 2) (2, 2) | 6, 7, 8
 func _place_modules(structured_data: BitStream) -> PackedByteArray:
     var qr_data: PackedByteArray = PackedByteArray()
-    var module_count: int = self.get_module_count()
-    qr_data.resize(module_count * module_count)
+    var dimension: int = self.get_dimension()
+    qr_data.resize(dimension * dimension)
 
     # place upper left finder
-    _place_finder(qr_data, module_count, Vector2i(0, 0))
+    _place_finder(qr_data, dimension, Vector2i(0, 0))
     # place lower left finder
-    _place_finder(qr_data, module_count, Vector2i(0, module_count - 7))
+    _place_finder(qr_data, dimension, Vector2i(0, dimension - 7))
     # place upper right finder
-    _place_finder(qr_data, module_count, Vector2i(module_count - 7, 0))
-    _place_separators(qr_data, module_count)
+    _place_finder(qr_data, dimension, Vector2i(dimension - 7, 0))
+    _place_separators(qr_data, dimension)
 
     var alignment_pattern_pos: Array[Vector2i] = self._get_alignment_pattern_positions()
     for pos: Vector2i in alignment_pattern_pos:
-        _place_align_pattern(qr_data, module_count, pos)
+        _place_align_pattern(qr_data, dimension, pos)
 
-    _place_timing_patterns(qr_data, module_count)
+    _place_timing_patterns(qr_data, dimension)
 
     # dark module
-    qr_data[8 + (module_count - 8) * module_count] = 1
+    qr_data[8 + (dimension - 8) * dimension] = _DARK
 
     # place data
-    _place_data(qr_data, module_count, alignment_pattern_pos, structured_data)
+    _place_data(qr_data, dimension, alignment_pattern_pos, structured_data)
 
     return qr_data
 
-static func _mask(qr_data: PackedByteArray, module_count: int, alignment_pattern_pos: Array[Vector2i], mask_pattern: int) -> void:
+static func _mask(qr_data: PackedByteArray, dimension: int, alignment_pattern_pos: Array[Vector2i], mask_pattern: int) -> void:
     var mask_fn: Callable = _mask_pattern_fns()[mask_pattern]
 
-    for x: int in range(module_count):
-        for y: int in range(module_count):
+    for x: int in range(dimension):
+        for y: int in range(dimension):
             var pos: Vector2i = Vector2i(x, y)
-            if _is_data_module(module_count, alignment_pattern_pos, pos):
-                var idx: int = x + y * module_count
+            if _is_data_module(dimension, alignment_pattern_pos, pos):
+                var idx: int = x + y * dimension
                 qr_data[idx] = int(mask_fn.call(pos)) ^ qr_data[idx]
 
 # return mask pattern number
-func _get_best_qr_mask(masked_qrs: Array[PackedByteArray], module_count: int) -> int:
+func _get_best_qr_mask(masked_qrs: Array[PackedByteArray], dimension: int) -> int:
     var min_idx: int = 0
     # integer max
     var cur_min_value: int = 9223372036854775807
     for idx: int in range(masked_qrs.size()):
-        var rating: int = _calc_mask_rating(masked_qrs[idx], module_count)
+        var rating: int = _calc_mask_rating(masked_qrs[idx], dimension)
         if rating < cur_min_value:
             min_idx = idx
             cur_min_value = rating
@@ -1413,13 +1405,13 @@ func _get_best_qr_mask(masked_qrs: Array[PackedByteArray], module_count: int) ->
     return min_idx
 
 func _mask_qr(qr_data: PackedByteArray) -> PackedByteArray:
-    var module_count: int = self.get_module_count()
+    var dimension: int = self.get_dimension()
     var alignment_pattern_pos: Array[Vector2i] = self._get_alignment_pattern_positions()
 
     # apply mask pattern
-    if !self.auto_mask_pattern:
-        _mask(qr_data, module_count, alignment_pattern_pos, self.mask_pattern)
-        _place_format(qr_data, module_count, self.error_correction, self.mask_pattern)
+    if ! self.auto_mask_pattern:
+        _mask(qr_data, dimension, alignment_pattern_pos, self.mask_pattern)
+        _place_format(qr_data, dimension, self.error_correction, self.mask_pattern)
         _place_version(qr_data, self.version)
 
         return qr_data
@@ -1430,12 +1422,12 @@ func _mask_qr(qr_data: PackedByteArray) -> PackedByteArray:
 
     for pattern_idx: int in range(mask_fns.size()):
         var cur_qr: PackedByteArray = qr_data.duplicate()
-        _mask(cur_qr, module_count, alignment_pattern_pos, pattern_idx)
+        _mask(cur_qr, dimension, alignment_pattern_pos, pattern_idx)
         # normally the format version is applied AFTER getting the best pattern, but will produce worse qr codes
-        _place_format(cur_qr, module_count, self.error_correction, pattern_idx)
+        _place_format(cur_qr, dimension, self.error_correction, pattern_idx)
         _place_version(cur_qr, self.version)
         masked_qr.append(cur_qr)
-    var best_mask: int = _get_best_qr_mask(masked_qr, module_count)
+    var best_mask: int = _get_best_qr_mask(masked_qr, dimension)
     self.mask_pattern = best_mask
     qr_data = masked_qr[best_mask]
 
@@ -1443,11 +1435,11 @@ func _mask_qr(qr_data: PackedByteArray) -> PackedByteArray:
 
 #### DEVEL TOOLS
 
-static func _print_qr(data: PackedByteArray, module_count: int) -> void:
-    for y: int in range(module_count):
+static func _print_qr(data: PackedByteArray, dimension: int) -> void:
+    for y: int in range(dimension):
         var row: String = ""
-        for x: int in range(module_count):
-            var value: int = data[y * module_count + x]
+        for x: int in range(dimension):
+            var value: int = data[y * dimension + x]
             match value:
                 0:
                     row += "⬜"

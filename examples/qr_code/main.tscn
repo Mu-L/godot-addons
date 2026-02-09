@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://u78fl5760vh3"]
 
 [ext_resource type="Script" uid="uid://w0qw7vc2yr4y" path="res://examples/qr_code/main.gd" id="1_55tdt"]
-[ext_resource type="Script" uid="uid://dynulhnyq5hpq" path="res://addons/qr_code/qr_code_rect.gd" id="1_t1m1p"]
+[ext_resource type="Script" uid="uid://dynulhnyq5hpq" path="res://addons/kenyoni/qr_code/qr_code_rect.gd" id="1_t1m1p"]
 
-[node name="HBoxContainer" type="HBoxContainer" unique_id=1018684991 node_paths=PackedStringArray("_input_data_text", "_encoding", "_error_correction", "_use_eci", "_eci_value", "_version", "_mask_pattern", "_module_px_size", "_qr_rect")]
+[node name="HBoxContainer" type="HBoxContainer" unique_id=1018684991 node_paths=PackedStringArray("_input_data_text", "_encoding", "_error_correction", "_use_eci", "_eci_value", "_version", "_mask_pattern", "_module_size", "_qr_rect")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,7 +17,7 @@ _use_eci = NodePath("MarginContainer2/VBoxContainer/options/UseECI")
 _eci_value = NodePath("MarginContainer2/VBoxContainer/options/ECIValue")
 _version = NodePath("MarginContainer2/VBoxContainer/options/Version")
 _mask_pattern = NodePath("MarginContainer2/VBoxContainer/options/MaskPattern")
-_module_px_size = NodePath("MarginContainer2/VBoxContainer/options/ModulePxSize")
+_module_size = NodePath("MarginContainer2/VBoxContainer/options/ModuleSize")
 _qr_rect = NodePath("MarginContainer/QRCodeRect")
 
 [node name="MarginContainer2" type="MarginContainer" parent="." unique_id=292203905]
@@ -170,15 +170,15 @@ custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ModulePxSizeLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=949913811]
+[node name="ModuleSizeLabel" type="Label" parent="MarginContainer2/VBoxContainer/options" unique_id=949913811]
 layout_mode = 2
-text = "Module Px Size"
+text = "Module Size"
 
-[node name="AutoModulePxSize" type="CheckBox" parent="MarginContainer2/VBoxContainer/options" unique_id=1389425839]
+[node name="AutoModuleSize" type="CheckBox" parent="MarginContainer2/VBoxContainer/options" unique_id=1389425839]
 layout_mode = 2
 button_pressed = true
 
-[node name="ModulePxSize" type="SpinBox" parent="MarginContainer2/VBoxContainer/options" unique_id=1674323374]
+[node name="ModuleSize" type="SpinBox" parent="MarginContainer2/VBoxContainer/options" unique_id=1674323374]
 layout_mode = 2
 size_flags_horizontal = 3
 allow_greater = true
@@ -213,6 +213,7 @@ layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 script = ExtResource("1_t1m1p")
+auto_update = true
 mode = 1
 error_correction = 1
 use_eci = false
@@ -221,7 +222,7 @@ auto_version = true
 auto_mask_pattern = true
 light_module_color = Color(1, 1, 1, 1)
 dark_module_color = Color(0, 0, 0, 1)
-auto_module_px_size = true
+auto_module_size = true
 quiet_zone_size = 4
 
 [connection signal="text_changed" from="MarginContainer2/VBoxContainer/InputDataText" to="." method="_on_input_data_text_text_changed"]
@@ -235,6 +236,6 @@ quiet_zone_size = 4
 [connection signal="value_changed" from="MarginContainer2/VBoxContainer/options/MaskPattern" to="." method="_on_mask_pattern_value_changed"]
 [connection signal="color_changed" from="MarginContainer2/VBoxContainer/options/LightModuleColor" to="." method="_on_light_module_color_color_changed"]
 [connection signal="color_changed" from="MarginContainer2/VBoxContainer/options/DarkModuleColor" to="." method="_on_dark_module_color_color_changed"]
-[connection signal="toggled" from="MarginContainer2/VBoxContainer/options/AutoModulePxSize" to="." method="_on_auto_module_px_size_toggled"]
-[connection signal="value_changed" from="MarginContainer2/VBoxContainer/options/ModulePxSize" to="." method="_on_module_px_size_value_changed"]
+[connection signal="toggled" from="MarginContainer2/VBoxContainer/options/AutoModuleSize" to="." method="_on_auto_module_px_size_toggled"]
+[connection signal="value_changed" from="MarginContainer2/VBoxContainer/options/ModuleSize" to="." method="_on_module_px_size_value_changed"]
 [connection signal="value_changed" from="MarginContainer2/VBoxContainer/options/QuietZoneSize" to="." method="_on_quiet_zone_size_value_changed"]

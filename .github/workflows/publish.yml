@@ -54,9 +54,19 @@ jobs:
             name: "Plugin Reloader",
           }
           - {
+            id: "kenyoni/ean13",
+            id-name: "ean13",
+            name: "EAN-13 Barcode",
+          }
+          - {
             id: "kenyoni/pot_generation",
             id-name: "pot_generation",
             name: "POT Generation",
+          }
+          - {
+            id: "kenyoni/qr_code",
+            id-name: "qr_code",
+            name: "QR Code",
           }
           - {
             id: "kenyoni/remove_orphan_uid",
@@ -67,11 +77,6 @@ jobs:
             id: "licenses",
             id-name: "licenses",
             name: "License Manager",
-          }
-          - {
-            id: "qr_code",
-            id-name: "qr_code",
-            name: "QR Code",
           }
           - {
             id: "texture_button_colored",
