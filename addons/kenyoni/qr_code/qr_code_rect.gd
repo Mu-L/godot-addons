@@ -51,6 +51,7 @@ var dark_module_color: Color = Color.BLACK:
 var auto_module_size: bool = true:
     set = set_auto_module_size
 ## Use that many pixel for one module.
+## If auto_module_size is set, this value might by only occasionally updated. In this case do not rely on it.
 var module_size: int = 1:
     set = set_module_size
 ## Use that many modules for the quiet zone. A value of 4 is recommended.
@@ -229,10 +230,12 @@ func set_quiet_zone_size(new_quiet_zone_size: int) -> void:
     if quiet_zone_size == new_quiet_zone_size:
         return
     quiet_zone_size = maxi(0, new_quiet_zone_size)
-    if self.auto_update:
+    if self.auto_module_size && self.auto_update:
         self._update_texture()
+    elif self.auto_module_size:
+        self._update_module_size()
 
-func _init() -> void:
+func _ready() -> void:
     if self.texture != null && self.auto_update:
         self.update()
 
@@ -271,7 +274,7 @@ func _get_property_list() -> Array[Dictionary]:
             "type": TYPE_CALLABLE,
             "usage": PROPERTY_USAGE_NONE if self.auto_update else PROPERTY_USAGE_EDITOR,
             "hint": PROPERTY_HINT_TOOL_BUTTON,
-            "hint_string": "Update texture"
+            "hint_string": "Update"
         },
         {
             "name": "auto_update",
@@ -400,8 +403,13 @@ func _notification(what: int) -> void:
         NOTIFICATION_RESIZED:
             if self.auto_module_size && self.auto_update:
                 self._update_texture()
+            elif self.auto_module_size:
+                self._update_module_size()
+
+func _update_module_size() -> void:
+    self.module_size = mini(self.size.x, self.size.y) / (self._qr.get_dimension() + 2 * self.quiet_zone_size)
 
 func _update_texture() -> void:
     if self.auto_module_size:
-        self.module_size = mini(self.size.x, self.size.y) / (self._qr.get_dimension() + 2 * self.quiet_zone_size)
+        self._update_module_size()
     self.texture = ImageTexture.create_from_image(QRCode.generate_image(self._cached_data, self.module_size, self.light_module_color, self.dark_module_color, self.quiet_zone_size))
