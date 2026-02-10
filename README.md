@@ -25,6 +25,8 @@ You can find a documentation with examples and detailed information [here](https
   Extension of `AspectRatioContainer` to update it's own size.
 - [Custom Theme Overrides](https://kenyoni-software.github.io/godot-addons/addons/custom_theme_overrides)  
   Utility to provide custom theme overrides for any node.
+- [EAN-13 Barcode](https://kenyoni-software.github.io/godot-addons/addons/ean13)  
+  EAN-13 barcode generation.
 - [Git SHA Project Setting](https://kenyoni-software.github.io/godot-addons/addons/git_sha_project_setting)  
   Add Git SHA as project setting.
 - [Hide Private Properties](https://kenyoni-software.github.io/godot-addons/addons/hide_private_properties)  
