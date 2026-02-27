@@ -16,6 +16,12 @@ Find the latest releases [here](https://github.com/kenyoni-software/godot-addons
 
 <div class="grid cards" markdown>
 
+-  [App Settings](addons/app_settings.md){ .md-button .center-lg-button }
+
+    ---
+
+    A flexible settings management system with support for staged values, readonly mode, validation and per-frame batched signals.
+
 -   [AspectRatioResizeContainer](addons/aspect_ratio_resize_container.md){ .md-button .center-lg-button }
 
     ---
