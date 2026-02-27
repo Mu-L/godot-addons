@@ -1,7 +1,6 @@
 ## The Renderer is only rudimentary validating the input data. It assumes correctly set options and data.
 @tool
 extends RefCounted
-class_name __KenyoniEan13Renderer
 
 const Ean13 := preload("res://addons/kenyoni/ean13/ean13.gd")
 

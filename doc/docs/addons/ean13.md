@@ -115,6 +115,10 @@ EAN-13 code renderer class.
 
 ## Changelog
 
+### 1.0.1
+
+- Fix plugin.cfg Godot version compatibility.
+
 ### 1.0.0
 
 - Initial release.
