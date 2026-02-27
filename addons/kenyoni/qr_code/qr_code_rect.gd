@@ -106,7 +106,7 @@ func set_data(new_data: Variant) -> void:
         QRCode.Mode.ALPHANUMERIC:
             self._qr.put_alphanumeric(new_data)
         QRCode.Mode.BYTE:
-            if typeof(new_data) == TYPE_PACKED_BYTE_ARRAY || ! self.use_eci:
+            if typeof(new_data) == TYPE_PACKED_BYTE_ARRAY || !self.use_eci:
                 self._qr.put_byte(new_data)
                 return
             match self.eci_value:
@@ -223,7 +223,7 @@ func set_module_size(new_module_size: int) -> void:
         return
     module_size = new_module_size
     # if not auto it was set directly
-    if ! self.auto_module_size && self.auto_update:
+    if !self.auto_module_size && self.auto_update:
         self._update_texture()
 
 func set_quiet_zone_size(new_quiet_zone_size: int) -> void:

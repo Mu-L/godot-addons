@@ -777,7 +777,7 @@ func get_dimension() -> int:
 func calc_min_version() -> int:
     var input_size: int = self._get_input_data_size()
     for idx: int in range(_DATA_CAPACITY.size()):
-        var cap: int = _DATA_CAPACITY[idx][ self.error_correction][ self.mode]
+        var cap: int = _DATA_CAPACITY[idx][self.error_correction][self.mode]
         if self.use_eci:
             # subtract roughly eci header size
             match self.mode:
@@ -814,16 +814,16 @@ static func _get_state(value: int, idx: int) -> bool:
     return value & (1 << idx) != 0
 
 func _get_data_codeword_count() -> int:
-    return _ERROR_CORRECTION[ self.version - 1][ self.error_correction][0]
+    return _ERROR_CORRECTION[self.version - 1][self.error_correction][0]
 
 func _get_ec_codeword_count() -> int:
-    return _ERROR_CORRECTION[ self.version - 1][ self.error_correction][1]
+    return _ERROR_CORRECTION[self.version - 1][self.error_correction][1]
 
 func _get_ec_block_count(group: int) -> int:
-    return _ERROR_CORRECTION[ self.version - 1][ self.error_correction][2 + (group - 1) * 2]
+    return _ERROR_CORRECTION[self.version - 1][self.error_correction][2 + (group - 1) * 2]
 
 func _get_ec_block_codeword_count(group: int) -> int:
-    return _ERROR_CORRECTION[ self.version - 1][ self.error_correction][3 + (group - 1) * 2]
+    return _ERROR_CORRECTION[self.version - 1][self.error_correction][3 + (group - 1) * 2]
 
 static func _calc_dimension(version: int) -> int:
     return 21 + 4 * (version - 1)
@@ -831,8 +831,8 @@ static func _calc_dimension(version: int) -> int:
 func _get_alignment_pattern_positions() -> Array[Vector2i]:
     var dimension: int = self.get_dimension()
     var positions: Array[Vector2i] = []
-    for row: int in _ALIGNMENT_PATTERN_POSITIONS[ self.version - 1]:
-        for col: int in _ALIGNMENT_PATTERN_POSITIONS[ self.version - 1]:
+    for row: int in _ALIGNMENT_PATTERN_POSITIONS[self.version - 1]:
+        for col: int in _ALIGNMENT_PATTERN_POSITIONS[self.version - 1]:
             # do not overlap finder positions
             if (row - 2 < 8 && col - 2 < 8) || \
                 (row - 2 < 8 && col + 2 > dimension - 8) || \
@@ -1409,7 +1409,7 @@ func _mask_qr(qr_data: PackedByteArray) -> PackedByteArray:
     var alignment_pattern_pos: Array[Vector2i] = self._get_alignment_pattern_positions()
 
     # apply mask pattern
-    if ! self.auto_mask_pattern:
+    if !self.auto_mask_pattern:
         _mask(qr_data, dimension, alignment_pattern_pos, self.mask_pattern)
         _place_format(qr_data, dimension, self.error_correction, self.mask_pattern)
         _place_version(qr_data, self.version)
