@@ -74,7 +74,7 @@ func _ready() -> void:
     self.update()
 
 func update() -> void:
-    if ! self.is_node_ready() || self.db == null:
+    if !self.is_node_ready() || self.db == null:
         return
     self._tree.clear()
     self._tree.create_item()
