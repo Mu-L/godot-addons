@@ -263,4 +263,4 @@ void set_value(new_value: {{ kny:godot Variant }}) {: .kny-mono-font }
 
 ### 1.0.0
 
-- Initial release for Godot 4.5
+- Initial release for Godot 4.4
