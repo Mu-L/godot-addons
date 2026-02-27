@@ -17,76 +17,51 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {
-            id: "aspect_ratio_resize_container",
-            id-name: "aspect_ratio_resize_container",
-            name: "AspectRatioResizeContainer",
-          }
-          - {
-            id: "custom_theme_overrides",
-            id-name: "custom_theme_overrides",
-            name: "Custom Theme Overrides",
-          }
-          - {
-            id: "git_sha_project_setting",
-            id-name: "git_sha_project_setting",
-            name: "Git SHA Project Setting",
-          }
-          - {
-            id: "glogging",
-            id-name: "glogging",
-            name: "GLogging",
-          }
-          - {
-            id: "hide_private_properties",
-            id-name: "hide_private_properties",
-            name: "Hide Private Properties",
-          }
-          - {
-            id: "icon_explorer",
-            id-name: "icon_explorer",
-            name: "Icon Explorer",
-          }
-          - {
-            id: "icons_patcher",
-            id-name: "icons_patcher",
-            name: "Icons Patcher",
-          }
-          - {
-            id: "kenyoni/plugin_reloader",
-            id-name: "plugin_reloader",
-            name: "Plugin Reloader",
-          }
-          - {
-            id: "kenyoni/ean13",
-            id-name: "ean13",
-            name: "EAN-13 Barcode",
-          }
-          - {
-            id: "kenyoni/pot_generation",
-            id-name: "pot_generation",
-            name: "POT Generation",
-          }
-          - {
-            id: "kenyoni/qr_code",
-            id-name: "qr_code",
-            name: "QR Code",
-          }
-          - {
-            id: "kenyoni/remove_orphan_uid",
-            id-name: "remove_orphan_uid",
-            name: "Remove Orphan UID",
-          }
-          - {
-            id: "licenses",
-            id-name: "licenses",
-            name: "License Manager",
-          }
-          - {
-            id: "texture_button_colored",
-            id-name: "texture_button_colored",
-            name: "TextureButtonColored",
-          }
+          - id: "kenyoni/app_settings"
+            id-name: "app_settings"
+            name: "App Settings"
+          - id: "aspect_ratio_resize_container"
+            id-name: "aspect_ratio_resize_container"
+            name: "AspectRatioResizeContainer"
+          - id: "custom_theme_overrides"
+            id-name: "custom_theme_overrides"
+            name: "Custom Theme Overrides"
+          - id: "git_sha_project_setting"
+            id-name: "git_sha_project_setting"
+            name: "Git SHA Project Setting"
+          - id: "glogging"
+            id-name: "glogging"
+            name: "GLogging"
+          - id: "hide_private_properties"
+            id-name: "hide_private_properties"
+            name: "Hide Private Properties"
+          - id: "icon_explorer"
+            id-name: "icon_explorer"
+            name: "Icon Explorer"
+          - id: "icons_patcher"
+            id-name: "icons_patcher"
+            name: "Icons Patcher"
+          - id: "kenyoni/plugin_reloader"
+            id-name: "plugin_reloader"
+            name: "Plugin Reloader"
+          - id: "kenyoni/ean13"
+            id-name: "ean13"
+            name: "EAN-13 Barcode"
+          - id: "kenyoni/pot_generation"
+            id-name: "pot_generation"
+            name: "POT Generation"
+          - id: "kenyoni/qr_code"
+            id-name: "qr_code"
+            name: "QR Code"
+          - id: "kenyoni/remove_orphan_uid"
+            id-name: "remove_orphan_uid"
+            name: "Remove Orphan UID"
+          - id: "licenses"
+            id-name: "licenses"
+            name: "License Manager"
+          - id: "texture_button_colored"
+            id-name: "texture_button_colored"
+            name: "TextureButtonColored"
 
     steps:
       - name: Checkout
@@ -175,7 +150,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NOTES: |
             Providing the latest release of all addons at one place.
-            
+
             This release tag is continuously updated.
         run: |
           output=$(gh release delete latest -y 2>&1) || [[ "${output}" == "release not found" ]]
