@@ -10,6 +10,31 @@ The best is to create an autoload `AppSettings` or `GameSetting`s that extends t
 [Registry](#registry): App settings manager class.  
 [Setting](#setting): Class representing an individual setting.
 
+A short incomplete overview:
+
+```python
+# create an autoload extending AppSettings
+AppSettings.add_setting(Setting.new(&"graphics/fullscreen", false)
+    .set_description("Enable fullscreen mode").
+    .set_apply_fn(func(s): DisplayServer.window_set_mode(...))
+    .set_validate_fn(func(_s, v): return v is bool)
+)
+# [...] more settings
+
+# load & apply on startup
+AppSettings.from_config(config)
+AppSettings.apply_all()
+
+# staged mode: queue changes until user confirms
+AppSettings.get_setting(&"audio/volume").set_staged(true)
+AppSettings.set_value(&"audio/volume", 0.8)
+# or discard_staged_values()
+AppSettings.apply_staged_values()
+
+# save
+AppSettings.to_config().save("user://settings.cfg")
+```
+
 [**Download**](https://github.com/kenyoni-software/godot-addons/releases)
 
 ## Compatibility
