@@ -5,8 +5,8 @@ const ResetButton := preload("res://examples/app_settings/settings/reset_button.
 @export var _container: GridContainer
 
 func _ready() -> void:
-    AppSettings.settings_changed.connect(self._update)
-    AppSettings.settings_staged_changed.connect(self._update)
+    GameSettings.settings_changed.connect(self._update)
+    GameSettings.settings_staged_changed.connect(self._update)
 
 func add_section(section: String) -> void:
     if self._container.get_child_count() > 0:
@@ -23,12 +23,12 @@ func add_section(section: String) -> void:
     self._container.add_child(Control.new())
     self._container.add_child(Control.new())
 
-func add_setting(setting: AppSettings.Setting) -> void:
+func add_setting(setting: GameSettings.Setting) -> void:
     self._add_label(setting)
     self._add_edit(setting)
     self._add_reset_button(setting)
 
-func _add_label(setting: AppSettings.Setting) -> void:
+func _add_label(setting: GameSettings.Setting) -> void:
     var label: Label = Label.new()
     self._container.add_child(label)
     label.text = setting.key().rsplit("/", 1)[-1].capitalize()
@@ -36,7 +36,7 @@ func _add_label(setting: AppSettings.Setting) -> void:
     label.mouse_filter = Control.MOUSE_FILTER_PASS
     label.set_meta(&"setting_key", setting.key())
 
-func _add_edit(setting: AppSettings.Setting) -> void:
+func _add_edit(setting: GameSettings.Setting) -> void:
     var typ: int = setting.get_meta("type", -1)
     var type_hint: int = setting.get_meta("hint", PROPERTY_HINT_NONE)
     # bool
@@ -97,7 +97,7 @@ func _add_edit(setting: AppSettings.Setting) -> void:
         return
     self._add_placeholder_label(setting)
 
-func _add_reset_button(setting: AppSettings.Setting) -> void:
+func _add_reset_button(setting: GameSettings.Setting) -> void:
     # hide reset button if setting is marked having no default value
     if setting.get_meta("no_default", false):
         self._container.add_child(Control.new())
@@ -109,14 +109,14 @@ func _add_reset_button(setting: AppSettings.Setting) -> void:
     reset_button.disabled = setting.staged_or_value() == setting.default_value()
     reset_button.pressed.connect(func() -> void: setting.reset())
 
-func _add_placeholder_label(setting: AppSettings.Setting) -> void:
+func _add_placeholder_label(setting: GameSettings.Setting) -> void:
     var label: Label = Label.new()
     self._container.add_child(label)
     label.set_meta(&"setting_key", setting.key())
     label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     label.text = str(setting.staged_or_value())
 
-func _create_option_button(setting: AppSettings.Setting) -> OptionButton:
+func _create_option_button(setting: GameSettings.Setting) -> OptionButton:
     var option_button: OptionButton = OptionButton.new()
     self._container.add_child(option_button)
     option_button.set_meta(&"setting_key", setting.key())
@@ -133,7 +133,7 @@ func _update() -> void:
         # skip spacer rows or section rows
         if key == "":
             continue
-        var setting: AppSettings.Setting = AppSettings.get_setting(key)
+        var setting: GameSettings.Setting = GameSettings.get_setting(key)
         if setting == null:
             continue
         if idx % 3 == 1:

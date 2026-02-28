@@ -13,6 +13,8 @@ enum GraphicDetails {
     ULTRA
 }
 
+const SETTINGS_FILE: String = "res://examples/app_settings/settings.cfg"
+
 const GAME_DIFFICULTY: StringName = &"game/difficulty"
 const GAME_PLUGINS: StringName = &"game/plugins"
 const GAME_BOT_LEVEL: StringName = &"game/bot_level"
@@ -124,4 +126,20 @@ func _init() -> void:
     .add_meta("hint", PROPERTY_HINT_RANGE)
     .add_meta("min", 0)
     .add_meta("max", 100))
-    self.apply_all()
+
+    self.load()
+    self.apply_staged_values()
+
+func save() -> Error:
+    return self.to_config().save(SETTINGS_FILE)
+
+func load() -> Error:
+    var cfg: ConfigFile = ConfigFile.new()
+    var err: Error = cfg.load(SETTINGS_FILE)
+    if err == Error.ERR_FILE_NOT_FOUND:
+        return Error.OK
+    if err != Error.OK:
+        return err
+    self.from_config(cfg)
+
+    return Error.OK

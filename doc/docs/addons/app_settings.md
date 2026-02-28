@@ -50,7 +50,7 @@ AppSettings.to_config().save("user://settings.cfg")
 
 {{ kny:source "/examples/app_settings/" }}
 
-For this example to work you have to create an autoload named `AppSettings` with the script `res://addons/app_settings/app_settings.gd`.
+For this example to work you have to create an autoload named `GameSettings` with the script `res://addons/app_settings/game_settings.gd`.
 
 ## Interface
 
@@ -285,6 +285,10 @@ void set_value(new_value: {{ kny:godot Variant }}) {: .kny-mono-font }
 :     Return the current effective value. Does not reflect any pending staged value.
 
 ## Changelog
+
+### 1.0.1
+
+- Fix `apply_staged_values()` not working due to a typo in the staged value check.
 
 ### 1.0.0
 

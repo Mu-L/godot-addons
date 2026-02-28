@@ -18,7 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GLogging="*res://addons/glogging/glogging.gd"
-AppSettings="*uid://byb7mt3yilm5h"
+GameSettings="*uid://byb7mt3yilm5h"
 
 [debug]
 

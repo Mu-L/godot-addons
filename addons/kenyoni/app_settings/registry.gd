@@ -158,7 +158,7 @@ func apply_all() -> void:
 ## Call `apply()` only on settings that have a pending staged value.
 func apply_staged_values() -> void:
     for setting: Setting in self._settings.values():
-        if setting._is_staged_value:
+        if setting._has_staged_value:
             setting.apply()
 
 ## Discard all pending staged values. `staged_changed` is emitted for each setting that had a staged value.
